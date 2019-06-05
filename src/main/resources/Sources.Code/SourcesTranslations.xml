@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc version="1.3" reference="Sources.Code.SourcesTranslations" locale="">
+  <web>Sources.Code</web>
+  <name>SourcesTranslations</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <creationDate>1546297200000</creationDate>
+  <parent>SourcesClass</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <date>1546297200000</date>
+  <contentUpdateDate>1546297200000</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>true</hidden>
+  <content># Class fields
+Sources.Code.SourcesClass_name=Name
+Sources.Code.SourcesClass_url=URL
+Sources.Code.SourcesClass_startDate=Start Date
+Sources.Code.SourcesClass_endDate=End Date
+Sources.Code.SourcesClass_competition=Competition
+Sources.Code.SourcesClass_sport=Sport
+Sources.Code.SourcesClass_lastFetchDate=Last Fetch
+
+# Live table generic keys
+sources.livetable.doc.title=Page Title
+sources.livetable.doc.name=Page Name
+sources.livetable.doc.space=Space
+sources.livetable.doc.fullname=Page full name
+sources.livetable.doc.location=Location
+sources.livetable.doc.author=Last Author
+sources.livetable.doc.creator=Creator
+sources.livetable.doc.date=Date
+sources.livetable.doc.creationDate=Creation Date
+sources.livetable._avatar=Avatar
+sources.livetable._images=Images
+sources.livetable._attachments=Attachments
+sources.livetable._actions=Actions
+sources.livetable._actions.edit=Edit
+sources.livetable._actions.delete=Delete
+sources.livetable.emptyvalue=-
+
+# Live table specific keys
+sources.livetable.name=Name
+sources.livetable.url=URL
+sources.livetable.startDate=Start Date
+sources.livetable.endDate=End Date
+sources.livetable.competition=Competition
+sources.livetable.sport=Sport
+sources.livetable.lastFetchDate=Last Fetch
+
+# Other keys
+sources.entry.name=Sources
+
+# Deprecated keys
+sources.dataSpace.title=Data
+</content>
+  <object>
+    <name>Sources.Code.SourcesTranslations</name>
+    <number>0</number>
+    <className>XWiki.TranslationDocumentClass</className>
+    <guid>edbbdd41-29af-42bb-ae89-2557e92c6b7a</guid>
+    <class>
+      <name>XWiki.TranslationDocumentClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <scope>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>scope</name>
+        <number>1</number>
+        <prettyName>Scope</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>GLOBAL|WIKI|USER|ON_DEMAND</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </scope>
+    </class>
+    <property>
+      <scope>WIKI</scope>
+    </property>
+  </object>
+</xwikidoc>
