@@ -46,7 +46,7 @@
         <idField>doc.fullName</idField>
         <multiSelect>0</multiSelect>
         <name>competition</name>
-        <number>5</number>
+        <number>6</number>
         <picker>1</picker>
         <prettyName>Competition</prettyName>
         <relationalStorage>1</relationalStorage>
@@ -68,7 +68,7 @@
         <emptyIsToday>0</emptyIsToday>
         <hint/>
         <name>endDate</name>
-        <number>4</number>
+        <number>5</number>
         <picker>1</picker>
         <prettyName>End Date</prettyName>
         <size>20</size>
@@ -84,7 +84,7 @@
         <emptyIsToday>0</emptyIsToday>
         <hint/>
         <name>lastFetchDate</name>
-        <number>7</number>
+        <number>9</number>
         <picker>1</picker>
         <prettyName>Last Fetch</prettyName>
         <size>20</size>
@@ -96,7 +96,7 @@
       <name>
         <customDisplay>{{include reference="AppWithinMinutes.Title"/}}</customDisplay>
         <disabled>0</disabled>
-        <hint/>
+        <hint>Hint</hint>
         <name>name</name>
         <number>1</number>
         <prettyName>Name</prettyName>
@@ -106,6 +106,22 @@
         <validationRegExp/>
         <classType>com.xpn.xwiki.objects.classes.ComputedFieldClass</classType>
       </name>
+      <parameters>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <editor>Text</editor>
+        <hint/>
+        <name>parameters</name>
+        <number>8</number>
+        <picker>0</picker>
+        <prettyName>Parameters</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </parameters>
       <sport>
         <cache>0</cache>
         <classname>Sports.Code.SportsClass</classname>
@@ -118,7 +134,7 @@
         <idField>doc.fullName</idField>
         <multiSelect>0</multiSelect>
         <name>sport</name>
-        <number>6</number>
+        <number>7</number>
         <picker>1</picker>
         <prettyName>Sport</prettyName>
         <relationalStorage>1</relationalStorage>
@@ -140,7 +156,7 @@
         <emptyIsToday>0</emptyIsToday>
         <hint/>
         <name>startDate</name>
-        <number>3</number>
+        <number>4</number>
         <picker>1</picker>
         <prettyName>Start Date</prettyName>
         <size>20</size>
@@ -152,7 +168,7 @@
       <url>
         <customDisplay/>
         <disabled>0</disabled>
-        <hint/>
+        <hint>Hint</hint>
         <name>url</name>
         <number>2</number>
         <picker>0</picker>
@@ -163,6 +179,22 @@
         <validationRegExp/>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </url>
+      <year>
+        <customDisplay>{{include reference="AppWithinMinutes.DateDisplayer" /}}</customDisplay>
+        <dateFormat>yyyy</dateFormat>
+        <disabled>0</disabled>
+        <emptyIsToday>1</emptyIsToday>
+        <hint/>
+        <name>year</name>
+        <number>3</number>
+        <picker>1</picker>
+        <prettyName>Year</prettyName>
+        <size>20</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.DateClass</classType>
+      </year>
     </class>
     <property>
       <competition/>
@@ -177,6 +209,9 @@
       <name/>
     </property>
     <property>
+      <parameters>["sport":"tennis","competition":"french open","year":2019,"gender":"men"]</parameters>
+    </property>
+    <property>
       <sport/>
     </property>
     <property>
@@ -184,6 +219,9 @@
     </property>
     <property>
       <url/>
+    </property>
+    <property>
+      <year>9999-12-31 00:00:00.0</year>
     </property>
   </object>
 </xwikidoc>

@@ -24,10 +24,14 @@
 #set ($discard = $doc.use('Sources.Code.SourcesClass'))
 (% class="xform" %)
 (((
-  ; &lt;label#if ($xcontext.action == 'edit') for="Sources.Code.SourcesClass_0_name"#end&gt;$escapetool.xml($doc.displayPrettyName('name', false, false))&lt;/label&gt;
+  ; &lt;label#if ($xcontext.action == 'edit') for="Sources.Code.SourcesClass_0_name"#end&gt;$escapetool.xml($doc.displayPrettyName('name', false, false))&lt;/label&gt;##
+    (% class="xHint" %)$services.localization.render('Hint')
   : $doc.display('name')
-  ; &lt;label#if ($xcontext.action == 'edit') for="Sources.Code.SourcesClass_0_url"#end&gt;$escapetool.xml($doc.displayPrettyName('url', false, false))&lt;/label&gt;
+  ; &lt;label#if ($xcontext.action == 'edit') for="Sources.Code.SourcesClass_0_url"#end&gt;$escapetool.xml($doc.displayPrettyName('url', false, false))&lt;/label&gt;##
+    (% class="xHint" %)$services.localization.render('Hint')
   : $doc.display('url')
+  ; &lt;label#if ($xcontext.action == 'edit') for="Sources.Code.SourcesClass_0_year"#end&gt;$escapetool.xml($doc.displayPrettyName('year', false, false))&lt;/label&gt;
+  : $doc.display('year')
   ; &lt;label#if ($xcontext.action == 'edit') for="Sources.Code.SourcesClass_0_startDate"#end&gt;$escapetool.xml($doc.displayPrettyName('startDate', false, false))&lt;/label&gt;
   : $doc.display('startDate')
   ; &lt;label#if ($xcontext.action == 'edit') for="Sources.Code.SourcesClass_0_endDate"#end&gt;$escapetool.xml($doc.displayPrettyName('endDate', false, false))&lt;/label&gt;
@@ -36,6 +40,8 @@
   : $doc.display('competition')
   ; &lt;label#if ($xcontext.action == 'edit') for="Sources.Code.SourcesClass_0_sport"#end&gt;$escapetool.xml($doc.displayPrettyName('sport', false, false))&lt;/label&gt;
   : $doc.display('sport')
+  ; &lt;label#if ($xcontext.action == 'edit') for="Sources.Code.SourcesClass_0_parameters"#end&gt;$escapetool.xml($doc.displayPrettyName('parameters', false, false))&lt;/label&gt;
+  : $doc.display('parameters')
   ; &lt;label#if ($xcontext.action == 'edit') for="Sources.Code.SourcesClass_0_lastFetchDate"#end&gt;$escapetool.xml($doc.displayPrettyName('lastFetchDate', false, false))&lt;/label&gt;
   : $doc.display('lastFetchDate')
 )))

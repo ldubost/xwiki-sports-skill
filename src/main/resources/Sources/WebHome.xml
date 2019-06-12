@@ -24,6 +24,7 @@
   'doc.title': {"displayName":"Name","link":"view"},
   'sport': {},
   'competition': {},
+  'year': {"html":true},
   'lastFetchDate': {"html":true},
   'startDate': {"html":true},
   'endDate': {"html":true},
@@ -39,7 +40,7 @@
   'selectedColumn': 'doc.title',
   'defaultOrder': 'asc'
 })
-#set ($columns = ['doc.title', 'sport', 'competition', 'lastFetchDate', 'startDate', 'endDate', 'url', '_actions'])
+#set ($columns = ['doc.title', 'sport', 'competition', 'year', 'lastFetchDate', 'startDate', 'endDate', 'url', '_actions'])
 #livetable('sources' $columns $columnsProperties $options)
 {{/velocity}}</content>
   <object>
@@ -115,7 +116,7 @@
       <class>Sources.Code.SourcesClass</class>
     </property>
     <property>
-      <columns>name sport competition lastFetchDate startDate endDate url _actions</columns>
+      <columns>name sport competition year lastFetchDate startDate endDate url _actions</columns>
     </property>
     <property>
       <dataSpace/>

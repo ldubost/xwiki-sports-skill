@@ -22,10 +22,12 @@
   <content># Class fields
 Sources.Code.SourcesClass_name=Name
 Sources.Code.SourcesClass_url=URL
+Sources.Code.SourcesClass_year=Year
 Sources.Code.SourcesClass_startDate=Start Date
 Sources.Code.SourcesClass_endDate=End Date
 Sources.Code.SourcesClass_competition=Competition
 Sources.Code.SourcesClass_sport=Sport
+Sources.Code.SourcesClass_parameters=Parameters
 Sources.Code.SourcesClass_lastFetchDate=Last Fetch
 
 # Live table generic keys
@@ -49,10 +51,12 @@ sources.livetable.emptyvalue=-
 # Live table specific keys
 sources.livetable.name=Name
 sources.livetable.url=URL
+sources.livetable.year=Year
 sources.livetable.startDate=Start Date
 sources.livetable.endDate=End Date
 sources.livetable.competition=Competition
 sources.livetable.sport=Sport
+sources.livetable.parameters=Parameters
 sources.livetable.lastFetchDate=Last Fetch
 
 # Other keys
