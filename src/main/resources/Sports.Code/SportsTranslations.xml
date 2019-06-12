@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc version="1.3" reference="Sports.Code.SportsTranslations" locale="">
+  <web>Sports.Code</web>
+  <name>SportsTranslations</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <creationDate>1546297200000</creationDate>
+  <parent>SportsClass</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <date>1546297200000</date>
+  <contentUpdateDate>1546297200000</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>true</hidden>
+  <content># Class fields
+Sports.Code.SportsClass_sport=Sport
+Sports.Code.SportsClass_homePage=Home Page
+
+# Live table generic keys
+sports.livetable.doc.title=Page Title
+sports.livetable.doc.name=Page Name
+sports.livetable.doc.space=Space
+sports.livetable.doc.fullname=Page full name
+sports.livetable.doc.location=Location
+sports.livetable.doc.author=Last Author
+sports.livetable.doc.creator=Creator
+sports.livetable.doc.date=Date
+sports.livetable.doc.creationDate=Creation Date
+sports.livetable._avatar=Avatar
+sports.livetable._images=Images
+sports.livetable._attachments=Attachments
+sports.livetable._actions=Actions
+sports.livetable._actions.edit=Edit
+sports.livetable._actions.delete=Delete
+sports.livetable.emptyvalue=-
+
+# Live table specific keys
+sports.livetable.sport=Sport
+sports.livetable.homePage=Home Page
+
+# Other keys
+sports.entry.name=Sports
+
+# Deprecated keys
+sports.dataSpace.title=Data
+</content>
+  <object>
+    <name>Sports.Code.SportsTranslations</name>
+    <number>0</number>
+    <className>XWiki.TranslationDocumentClass</className>
+    <guid>64b05723-d428-4fcf-90b3-6d1a3064ec11</guid>
+    <class>
+      <name>XWiki.TranslationDocumentClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <scope>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>scope</name>
+        <number>1</number>
+        <prettyName>Scope</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>GLOBAL|WIKI|USER|ON_DEMAND</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </scope>
+    </class>
+    <property>
+      <scope>WIKI</scope>
+    </property>
+  </object>
+</xwikidoc>

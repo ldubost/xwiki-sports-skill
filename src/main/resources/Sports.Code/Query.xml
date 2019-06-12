@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc version="1.3" reference="Sports.Code.Query" locale="">
+  <web>Sports.Code</web>
+  <name>Query</name>
+  <language/>
+  <defaultLanguage>en</defaultLanguage>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <creationDate>1546297200000</creationDate>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <date>1546297200000</date>
+  <contentUpdateDate>1546297200000</contentUpdateDate>
+  <version>1.1</version>
+  <title>Sports Results Query</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity}}
+{{html clean="false"}}
+&lt;script type="text/javascript"&gt;
+require(['jquery'], function($) {
+
+  function speak(text) {
+    $("#results").html($("#results").html() + "&lt;br /&gt;" +  text);
+    var synth = window.speechSynthesis;
+    var utterThis = new SpeechSynthesisUtterance(text);
+    utterThis.lang = 'en-US'
+    synth.speak(utterThis);
+  }
+
+  function go(form) {
+       var regex = /(.*?)-(.*?)-(.*?)-(.*)/;
+       var found = form.sport.value.match(regex);
+       
+       var sport = found[1].replace("vb", "volley-ball");
+       var competition = found[2];
+       var year = found[3];
+       var type = found[4];
+       speak("Retrieving " + sport + " results for player " + form.player.value);
+       var url = "/xwiki/bin/get/Sports/Code/JSON?outputSyntax=plain&amp;type=" + type + "&amp;year=" + year + "&amp;sport="+ sport + "&amp;competition=" + competition + "&amp;player=" + encodeURIComponent(form.player.value);
+       if (form.save.checked)
+        url += "&amp;save=1";
+       console.log("URL: " + url)
+       $.getJSON(url, function(result) {
+           console.log(result);
+           speak(result.text);
+       });
+  }
+  window.go = go;
+});
+&lt;/script&gt;
+&lt;form action="" onsubmit="window.go(this); return false;"&gt;
+Player or Team: &lt;input type="text" name="player" value="" /&gt;
+   &lt;select name="sport"&gt;
+     &lt;option value="tennis-rg-2019-0"&gt;Roland Garros 2019 Men&lt;/option&gt;
+     &lt;option value="tennis-rg-2019-1"&gt;Roland Garros 2019 Women&lt;/option&gt;
+     &lt;option value="vb-nl-2019-0"&gt;Volley-Ball Nations League 2019 Men&lt;/option&gt;
+     &lt;option value="football-worldcup-2019-1"&gt;Football World-cup 2019 Women&lt;/option&gt;
+   &lt;/select&gt;
+  #if($hasAdmin)
+  &lt;input type="checkbox" name="save" value="1" /&gt; Save pages
+  #end
+  &lt;input type="submit" value="Go" class="button"/&gt;
+  &lt;br /&gt;
+&lt;/form&gt;
+&lt;div id="results"&gt;
+&lt;/div&gt;
+{{/html}}
+{{/velocity}}</content>
+</xwikidoc>
