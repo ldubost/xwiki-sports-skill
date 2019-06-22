@@ -209,7 +209,7 @@
       <name/>
     </property>
     <property>
-      <parameters>["sport":"football","competition":"worldcup","year":"2019","gender":"women"]</parameters>
+      <parameters>{ "sport":"football","competition":"worldcup","year":"2019","gender":"women", "type" : "1", "code" : "Sports.Code.Football" }</parameters>
     </property>
     <property>
       <sport>Sports.Football.WebHome</sport>

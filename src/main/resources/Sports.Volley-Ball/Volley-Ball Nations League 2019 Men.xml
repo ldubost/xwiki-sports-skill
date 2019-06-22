@@ -197,7 +197,7 @@
       </year>
     </class>
     <property>
-      <competition>Competitions.Volley-Ball Nations League.WebHome</competition>
+      <competition>Sports.Volley-Ball.VolleyBallNationsLeague</competition>
     </property>
     <property>
       <endDate>1970-07-20 00:00:00.0</endDate>
@@ -209,7 +209,7 @@
       <name/>
     </property>
     <property>
-      <parameters>["sport":"volleyball","competition":"nations league","year":"2019","gender":"men"]</parameters>
+      <parameters>{ "sport" : "volleyball", "competition" : "nations league", "year" : "2019", "gender" : "men", "type" : "0", "code" : "Sports.Code.VolleyBall" }</parameters>
     </property>
     <property>
       <sport>Sports.Volley-Ball.WebHome</sport>
@@ -218,10 +218,10 @@
       <startDate>1970-05-30 00:00:00.0</startDate>
     </property>
     <property>
-      <url>https://en.wikipedia.org/wiki/2019_FIVB_Volleyball_Men%27s_Nations_League</url>
+      <url>https://en.wikipedia.org/wiki/2019_FIVB_Volleyball_Men%27s_Nations_League?action=raw</url>
     </property>
     <property>
-      <year>2019-06-12 21:16:54.0</year>
+      <year>2019-01-01 00:00:00.0</year>
     </property>
   </object>
 </xwikidoc>
