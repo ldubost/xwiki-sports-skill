@@ -46,5 +46,46 @@
   : $doc.display('lastFetchDate')
 )))
 {{/html}}
-{{/velocity}}</content>
+{{/velocity}}
+
+{{groovy}}
+import groovy.json.JsonOutput;
+
+if (request.query) {
+    def sg = xwiki.parseGroovyFromPage("Sports.Code.Groovy")
+    def json = ""
+    try {
+     sg.setXWiki(xwiki, xcontext, services)
+
+     def source = sg.loadSource(doc.fullName)
+     sg.addSource(source)
+  
+     json = sg.getResults(request.query, source.sport, source.type)
+     def output = JsonOutput.toJson(json);
+     print json.text; 
+     print "{{{ ${output} }}}"
+    } catch (Throwable e) {
+      println e.getMessage();
+      println e.getStackTrace()
+      println """{{{ ${json} }}}"""
+    }
+    if (request.debug) {
+      println """Debug: {{{ ${sg.debug} }}}"""
+    }
+} else {
+    println """
+    
+    {{html clean=false}}
+    &lt;form action=""&gt;
+    Query: &lt;input type="text" name="query" /&gt;
+    &lt;br /&gt;&lt;input type="checkbox" name="save" value="1" /&gt; Save
+    &lt;br /&gt;&lt;input type="checkbox" name="debug" value="1" /&gt; Debug
+    &lt;br /&gt;
+    &lt;input type="submit" value="Search" class="button" /&gt;
+    &lt;/form&gt;
+    {{/html}}
+    
+    """
+}
+{{/groovy}}</content>
 </xwikidoc>

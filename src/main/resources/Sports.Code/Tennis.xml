@@ -17,7 +17,7 @@
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>false</hidden>
+  <hidden>true</hidden>
   <content>// {{groovy}}
 import groovy.json.JsonOutput;
 
@@ -40,84 +40,6 @@ public class Tennis {
     this.sports = sports;
   }
 
-  def savePlayer(player, playerSpace) {
-      def className = "Sports.Tennis.Players.Code.PlayersClass"
-      if (player!=null &amp;&amp; player.trim()!="") {
-       def playerPageName = playerSpace + "." + player;
-       addDebug("Ready to save player " + playerPageName)
-       if (!xwiki.exists(playerPageName)) {
-          addDebug("Saving player " + playerPageName)
-          def playerDoc = xwiki.getDocument(playerPageName)
-          playerDoc.use(playerDoc.getObject(className, true))
-          playerDoc.setTitle(player);
-          playerDoc.save("Creating player")
-       }
-        return playerPageName;
-      }
-      return null;
-  }
-
-  
-  def saveResults(games, source) {
-    def className = "Sports.Tennis.Games.Code.GamesClass";
-    for (g in games) {
-      def player1PageName = savePlayer(g.player1, source.playerSpace)
-      def player2PageName = savePlayer(g.player2, source.playerSpace)
-      def winnerPageName = savePlayer(g.winner, source.playerSpace)
-      addDebug("Ready to save game " + player1PageName + " " + player2PageName + " " + winnerPageName)
-      if (player1PageName==null || player2PageName==null) {
-        addDebug("No saving")
-        continue;
-      }
-      def sid = "${source.competition}${source.year}${g.player1}${g.player2}"
-      def id = sid.hashCode()
-      if (id&lt;0) id=-id
-      def gamePageName = "${source.gameSpace}.${id}";
-      def sgamePageName = gamePageName.toString()
-      def gameDoc = xwiki.getDocument(sgamePageName)
-      if (gameDoc.isNew()||gameDoc.getObject(className)) {
-          def needsSave = false;
-          gameDoc.use(gameDoc.getObject(className, true))
-          if (gameDoc.getValue("player1")!= player1PageName) {
-             gameDoc.set("player1", player1PageName);
-             addDebug("player1 changed")
-             needsSave = true;
-          }
-          if (gameDoc.getValue("player2")!= player2PageName) {
-             gameDoc.set("player2", player2PageName);
-             addDebug("player2 changed")
-             needsSave = true;
-          }
-          if (g.winner &amp;&amp; g.winner!="" &amp;&amp; gameDoc.getValue("winner")!= winnerPageName) {
-             gameDoc.set("winner", winnerPageName);
-             addDebug("winner changed")
-             needsSave = true;
-          }
-          if (g.score &amp;&amp; g.score!="" &amp;&amp; gameDoc.getValue("score")!= g.score) {
-             addDebug("score changed")
-             gameDoc.set("score", g.score);
-             needsSave = true;
-          }
-          if (gameDoc.getValue("competition")!= source.competition) {
-             addDebug("competition changed")
-             gameDoc.set("competition", source.competition);
-             needsSave = true;
-          }
-          def currentYear = gameDoc.display("year")
-          gameDoc.set("year", source.year);
-          def newYear = gameDoc.display("year")
-          if (currentYear!=newYear) {
-             addDebug("year changed")
-             needsSave = true;
-          }
-          if (needsSave) {
-             addDebug("Saving game ${sgamePageName}")
-             gameDoc.save("Creating game")
-          }
-       }
-    }
-  }
-
   def cleanScore (score) {
     if (score=="&lt;small&gt;w/o&lt;/small&gt;")
     return -1;
@@ -130,7 +52,7 @@ public class Tennis {
       return Integer.parseInt(s.trim());
   }
 
-  def getAllResults(data, currentPlayer) {
+  def getAllResults(data, currentPlayer, roundMap) {
     def cacheId = data.hashCode();
     def games = []
 
@@ -140,11 +62,13 @@ public class Tennis {
     } else {
       def game = [:]
       def set = [:]
+      def round = ""
       def player1 = false;
-      def m = data =~ /RD[0-9]-(.*?)=(.*)/
+      def m = data =~ /(RD[0-9])-(.*?)=(.*)/
       addDebug("Found: " + m.count + " items");
       (0..&lt;m.count).each {
-        if (m[it][1].contains("team")) {
+        round = m[it][1]
+        if (m[it][2].contains("team")) {
           addDebug("In player")
           player1 = !player1
           if (player1) {
@@ -153,7 +77,8 @@ public class Tennis {
             game = [:]
             set = [:]
           }
-          def player = m[it][2]
+          def player = m[it][3]
+          game.level = roundMap.get(round) ? roundMap.get(round) : round;
           def regex = /\[\[(.*?)(\||\])/
           def m1 = player =~ regex
           if (m1.count&gt;0) {
@@ -166,9 +91,9 @@ public class Tennis {
             }
           }
         } else {
-          def score = m[it][2]
+          def score = m[it][3]
           def regex1 = /score[0-9]+-([0-9])/
-          def m1 = m[it][1] =~ regex1
+          def m1 = m[it][2] =~ regex1
           if (m1 &amp;&amp; m1.count&gt;0) {
             def currentSet = set[m1[0][1]]
             addDebug("In score: " + currentSet + " " + cleanScore(score));
@@ -227,7 +152,7 @@ public class Tennis {
     return games;
   }
   
-  def getResults(data, player) {
+  def getResults(data, player, source) {
     def regex1 = (data =~ /(?ms)(===Finals===.*?===)/)
     def regex2 = (data =~ /(?ms)(===Top half===.*)/)
     def data1 = (regex1!=null &amp;&amp; regex1.size()&gt;0) ? regex1[0][1] : ""
@@ -238,13 +163,14 @@ public class Tennis {
       addDebug("""Data2""")
       addDebug("""{{{ ${data2 }}}}""")
     }
-    def games1 = getAllResults(data1, player);
-    def games2 = getAllResults(data2, player);
+    def games1 = getAllResults(data1, player, ["RD1" : "Q", "RD2" : "S", "RD3" : "F"]);
+    def games2 = getAllResults(data2, player, [:]);
     if (request.debug) {
       addDebug("""Results1: {{{ ${games1 }}}}""");
       addDebug("""Results2: {{{ ${games2 }}}}"""); 
     }
-    def games = games2
+    def games = []
+    games.addAll(games2)
     games.addAll(games1)
     return games;
   }

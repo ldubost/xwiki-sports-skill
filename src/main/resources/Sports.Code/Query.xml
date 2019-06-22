@@ -17,7 +17,7 @@
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>false</hidden>
+  <hidden>true</hidden>
   <content>{{velocity}}
 {{html clean="false"}}
 &lt;script type="text/javascript"&gt;
@@ -34,20 +34,23 @@ require(['jquery'], function($) {
   function go(form) {
        var regex = /(.*?)-(.*?)-(.*?)-(.*)/;
        var found = form.sport.value.match(regex);
-       
+
        var sport = found[1].replace("vb", "volley-ball");
        var competition = found[2];
        var year = found[3];
        var type = found[4];
        speak("Retrieving " + sport + " results for player " + form.player.value);
-       var url = "/xwiki/bin/get/Sports/Code/JSON?outputSyntax=plain&amp;type=" + type + "&amp;year=" + year + "&amp;sport="+ sport + "&amp;competition=" + competition + "&amp;player=" + encodeURIComponent(form.player.value);
-       if (form.save.checked)
+       var url = "/xwiki/bin/get/Sports/Code/JSON?outputSyntax=plain&amp;type=" + type + "&amp;year=" + year + "&amp;sport="+ sport + "&amp;competition=" + competition + "&amp;player=" + encodeURIComponent(form.player.value) + "&amp;nb=" + form.nb.value;
+       if (form.save &amp;&amp; form.save.checked)
         url += "&amp;save=1";
        console.log("URL: " + url)
        $.getJSON(url, function(result) {
            console.log(result);
-           speak(result.text);
-       });
+           if (!result || !result.text || result.text=="")
+            speak("No results found")
+           else
+            speak(result.text);
+       }).error(function() { speak("An error occured while retrieving results")});
   }
   window.go = go;
 });
@@ -55,10 +58,20 @@ require(['jquery'], function($) {
 &lt;form action="" onsubmit="window.go(this); return false;"&gt;
 Player or Team: &lt;input type="text" name="player" value="" /&gt;
    &lt;select name="sport"&gt;
-     &lt;option value="tennis-rg-2019-0"&gt;Roland Garros 2019 Men&lt;/option&gt;
-     &lt;option value="tennis-rg-2019-1"&gt;Roland Garros 2019 Women&lt;/option&gt;
-     &lt;option value="vb-nl-2019-0"&gt;Volley-Ball Nations League 2019 Men&lt;/option&gt;
-     &lt;option value="football-worldcup-2019-1"&gt;Football World-cup 2019 Women&lt;/option&gt;
+#set($sg = $xwiki.parseGroovyFromPage("Sports.Code.Groovy"))
+#set($ok = $sg.setXWiki($xwiki, $xcontext, $services))
+#set($sources = $sg.loadSources(false))
+$sources
+   #foreach($source in $sources)
+     &lt;option value="${source.sport}-${source.competition}-${source.year}-${source.type}"&gt;${source.title}&lt;/option&gt;
+   #end
+   &lt;/select&gt;
+   &lt;select name="nb"&gt;
+     &lt;option value="1"&gt;1 result&lt;/option&gt;
+     &lt;option value="2"&gt;2 results&lt;/option&gt;
+     &lt;option value="3"&gt;3 results&lt;/option&gt;
+     &lt;option value="4"&gt;4 results&lt;/option&gt;
+     &lt;option value="5"&gt;5 results&lt;/option&gt;
    &lt;/select&gt;
   #if($hasAdmin)
   &lt;input type="checkbox" name="save" value="1" /&gt; Save pages

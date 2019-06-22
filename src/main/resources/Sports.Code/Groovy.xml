@@ -17,16 +17,19 @@
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>false</hidden>
+  <hidden>true</hidden>
   <content>// {{groovy}}
 import groovy.json.JsonOutput;
+import groovy.json.JsonSlurper;
 import org.joda.time.format.DateTimeFormat;
+import org.joda.time.DateTime;
 
 public class Sports {
   def xwiki;
   def xcontext;
   def request;
   def response;
+  def services;
   def codeGroovy;
 
   def debug = "";
@@ -44,25 +47,26 @@ public class Sports {
     startTime = (new Date()).getTime()
     lastTime = startTime;
   }
-  
+
   def addTime(name) {
     def newTime = (new Date()).getTime()
     def dtime = newTime - lastTime;
     times.put(name, dtime);
     lastTime = newTime;
   }
-  
+
   def endTime(name) {
     addTime(name);
     def dtime = lastTime - startTime;
     times.put("total", dtime);
   }
-  
-  def setXWiki(xwiki, xcontext) {
+
+  def setXWiki(xwiki, xcontext, services) {
     this.xwiki = xwiki;
     this.xcontext = xcontext;
     this.request = xcontext.request;
     this.response = xcontext.response;
+    this.services = services;
   }
 
   def addSource(source) {
@@ -71,70 +75,240 @@ public class Sports {
       sources.put(key, source)
     }
   }
-    
+
   def getSource(sport, type) {
     def key = (type) ? "${sport}-${type}" : sport;
     return sources.get(key);
   }
-  
-  def getResults(player, sport, type) {
-     startTime()
-     def source = getSource(sport, type);
-     if (source==null)
-        return [:];
-     codeGroovy = xwiki.parseGroovyFromPage(source.code)
-     codeGroovy.setXWiki(xwiki, xcontext, this)
-     def data = xwiki.getURLContent(source.url)
-     addTime("source")
-     def games = codeGroovy.getResults(data, player)
-     addTime("results")
-     if (request.save) {
-          codeGroovy.saveResults(games, source)
-     }
-     addTime("save")
-     def json = filterResults(games, player)
-     endTime("filter")
-     json.times = times;
-     if (request.debug)
-      json.debug = debug;
-     return json;
-  }
-  
-  def filterResults(games, player) {
-    def results = []
-    for (g in games) {
-      if ((g.player1!=null &amp;&amp; g.player1.toLowerCase().contains(player.toLowerCase()))||(g.player2!=null) &amp;&amp; g.player2.toLowerCase().contains(player.toLowerCase()))
-      results.add(g)
-    }
-    def json = [:]
-    json.results = results;
-    json.text = "";
-    results = results.reverse()
-    def nextGameAdded = false;
-    for (res in results) {
-      if (res.winner==null) {
-        if (res.score==null||res.score.trim()=="") {
-          json.text = "The next game is ${res.player1} against ${res.player2}, "
-        } else {
-          json.text+= "The score of ${res.player1} against ${res.player2} is currently ${res.score}"
-          break;
-        }
-      } else {
-        if (res.winner.toLowerCase().contains(player.toLowerCase())) {
-          if (res.player1.toLowerCase().contains(player.toLowerCase()))
-          json.text+= "${res.player1} has won the game ${res.player1} against ${res.player2} ${res.score}"
-          else
-            json.text+= "${res.player2} has won the game ${res.player1} against ${res.player2} ${res.score}"
-        } else {
-          if (res.player1.toLowerCase().contains(player.toLowerCase()))
-          json.text+= "${res.player1} has lost the game ${res.player1} against ${res.player2} ${res.score}"
-          else
-            json.text+= "${res.player2} has lost the game ${res.player1} against ${res.player2} ${res.score}"
-        }
-        break;
+
+  def loadSources(force) {
+    if (sources.size()==0||force) {
+      def sourcePages = services.query.xwql("select doc.fullName from Document doc, doc.object(Sources.Code.SourcesClass) as item where doc.name&lt;&gt;'SourcesTemplate'").execute();
+      for (sourcePage in sourcePages) {
+        addSource(loadSource(sourcePage));
       }
     }
+    return sources
+  }
 
+  def loadSource(sourcePage) {
+    def sourceDoc = xwiki.getDocument(sourcePage)
+    def sportDoc = xwiki.getDocument(sourceDoc.getValue("sport"))
+    def competitionDoc = xwiki.getDocument(sourceDoc.getValue("competition"))
+    def sportSpace = sportDoc.getSpace();
+    def source = ["title" : sourceDoc.title, "url" : sourceDoc.getValue("url"), "sportPage" : sourceDoc.getValue("sport"), "competitionPage" : sourceDoc.getValue("competition"), "year" : sourceDoc.getValue("year"), "gameSpace" : "${sportSpace}.Games", "playerSpace" : "${sportSpace}.Players", "type" : "0"]
+    def options = sourceDoc.getValue("parameters")
+    if (options &amp;&amp; options.trim()!="") {
+      def jsonSlurper = new JsonSlurper()
+      try {
+        def opt = jsonSlurper.parseText(options)
+        opt.each { key, val -&gt;
+          source[key] = val;
+        }
+      } catch (e) {
+        addDebug("Failed to parse ${options}")
+      }
+    }
+    return source;
+  }
+  // sg.addSource([ "url" : "https://en.wikipedia.org/wiki/2019_French_Open_%E2%80%93_Men%27s_Singles?action=raw", "sport" : "tennis", "type" : "0", "code" : "Sports.Code.Tennis", "gameSpace" : "Sports.Tennis.Games", "playerSpace" : "Sports.Tennis.Players", "competition" : "Sports.Tennis.RolandGarros", "year" : "2019"])
+
+
+
+  def savePlayer(player, playerSpace, sport) {
+    def className = "Players.Code.PlayersClass"
+    if (player!=null &amp;&amp; player.trim()!="") {
+      def playerPageName = playerSpace + "." + player;
+      addDebug("Ready to save player " + playerPageName)
+      if (!xwiki.exists(playerPageName)) {
+        addDebug("Saving player " + playerPageName)
+        def playerDoc = xwiki.getDocument(playerPageName)
+        playerDoc.use(playerDoc.getObject(className, true))
+        playerDoc.setTitle(player);
+        playerDoc.set("sport", sport);
+        playerDoc.save("Creating player")
+      }
+      return playerPageName.toString();
+    }
+    return null;
+  }
+
+  def saveGames(games, source) {
+    def className = "Games.Code.GamesClass";
+    def counter = 1;
+    for (g in games) {
+      def player1PageName = savePlayer(g.player1, source.playerSpace, source.sportPage)
+      def player2PageName = savePlayer(g.player2, source.playerSpace, source.sportPage)
+      def winnerPageName = savePlayer(g.winner, source.playerSpace, source.sportPage)
+      addDebug("Ready to save game " + player1PageName + " " + player2PageName + " " + winnerPageName)
+      if (player1PageName==null || player2PageName==null) {
+        addDebug("No saving")
+        continue;
+      }
+      def sid = "${source.competition}${source.year}${g.player1}${g.player2}"
+      def id = sid.hashCode()
+      if (id&lt;0) id=-id
+      def gamePageName = "${source.gameSpace}.${id}";
+      def sgamePageName = gamePageName.toString()
+      def gameDoc = xwiki.getDocument(sgamePageName)
+      if (gameDoc.isNew()||gameDoc.getObject(className)) {
+        def needsSave = false;
+        gameDoc.use(gameDoc.getObject(className, true))
+        def players =[player1PageName, player2PageName]
+        def currentPlayers = gameDoc.getValue("players")
+        if (currentPlayers==null || currentPlayers.size()&lt;2 || currentPlayers.join(",")!=players.join(",")) {
+          gameDoc.set("players", players);
+          addDebug("players changed")
+          needsSave = true;
+        }
+        if (g.winner &amp;&amp; g.winner!="" &amp;&amp; gameDoc.getValue("winner")!= winnerPageName) {
+          gameDoc.set("winner", winnerPageName);
+          addDebug("winner changed")
+          needsSave = true;
+        }
+        if (g.score &amp;&amp; g.score!="" &amp;&amp; gameDoc.getValue("score")!= g.score) {
+          addDebug("score changed")
+          gameDoc.set("score", g.score);
+          needsSave = true;
+        }
+        if (g.detailedScore &amp;&amp; g.detailedScore!="" &amp;&amp; gameDoc.getValue("detailedScore")!= g.detailedScore) {
+          addDebug("detailedScore changed")
+          gameDoc.set("detailedScore", g.detailedScore);
+          needsSave = true;
+        }
+        if (g.gameDate &amp;&amp; g.gameDate!="" &amp;&amp; gameDoc.getValue("gameDate")!= g.gameDate) {
+          addDebug("gameDate changed")
+          gameDoc.set("gameDate", g.gameDate);
+          needsSave = true;
+        }
+        if (gameDoc.getValue("competition")!= source.competitionPage) {
+          addDebug("competition changed")
+          gameDoc.set("competition", source.competitionPage);
+          needsSave = true;
+        }
+        if (gameDoc.getValue("sport")!= source.sportPage) {
+          addDebug("sport changed")
+          gameDoc.set("sport", source.sportPage);
+          needsSave = true;
+        }
+        if (gameDoc.getValue("order")!=counter) {
+          addDebug("counter changed")
+          gameDoc.set("order", counter);
+          needsSave = true;
+        }
+        if (needsSave) {
+          addDebug("Saving game ${sgamePageName}")
+          gameDoc.save("Creating game")
+        }
+        counter++;
+      }
+    }
+  }
+
+
+  def getResults(player, sport, type) {
+    startTime()
+    def source = getSource(sport, type);
+    if (source==null) {
+       addDebug("No matching source for " + sport + " and type " + type)
+       return ["text": "No matching source for " + sport + " and type " + type];
+    }
+    codeGroovy = xwiki.parseGroovyFromPage(source.code)
+    codeGroovy.setXWiki(xwiki, xcontext, this)
+    addDebug("URL: ${source.url}")
+    def data = xwiki.getURLContent(source.url)
+    addTime("source")
+    def games = codeGroovy.getResults(data, player, source)
+    addTime("results")
+    if (request.save) {
+      saveGames(games, source)
+    }
+    addTime("save")
+    def json = filterResults(games, player)
+    endTime("filter")
+    json.times = times;
+    json.source = source;
+    if (request.debug)
+      json.debug = debug;
+    return json;
+  }
+
+  def filterResults(games, player) {
+    def json = [:]
+    try {
+    def results = []
+    for (g in games) {
+      if (player=="") {
+        results.add(g)
+      }
+      else if ((g.player1!=null &amp;&amp; g.player1.toLowerCase().contains(player.toLowerCase()))||(g.player2!=null) &amp;&amp; g.player2.toLowerCase().contains(player.toLowerCase()))
+        results.add(g)
+    }
+    def df = DateTimeFormat.forPattern("dd/MMM/yyyy").withLocale(new Locale("en"))
+    def nb = 0;
+    def maxNb = (request.nb) ? Integer.parseInt(request.nb) : 1;
+    def myresults = results.reverse()
+    json.results = myresults;
+    json.text = "";
+    def nextGameAdded = false;
+    for (res in json.results) {
+      if (res.gameDate &amp;&amp; res.gameDate!="")
+       res.formattedDate = df.print(res.gameDate);
+    }
+    for (res in json.results) {
+      res.gameDate = "";
+      def gameName = "game"
+      if (res.level=="Q")
+      gameName = "Quarter-final"
+      else if (res.level=="D")
+        gameName = "Semi-final"
+      if (res.level=="F")
+      gameName = "Final"
+
+      if (res.winner==null) {
+        if (res.score==null||res.score.trim()=="") {
+          if (gameName=="game") {
+            json.text = "The next game is ${res.player1} against ${res.player2}"
+            if (res.formattedDate) {
+              json.text += " on ${res.formattedDate}"
+            }
+            json.text += ", "
+          } else
+            json.text = "The next game is the ${gameName} ${res.player1} against ${res.player2}, "
+        } else {
+          json.text+= "The score of ${res.player1} against ${res.player2} is currently ${res.score}"
+          nb++;
+          if (nb&gt;=maxNb) {
+            break;
+          } else if (json.text!="") {
+            json.text += ", "
+          }
+        }
+      } else {
+        if (player=="" || res.winner.toLowerCase().contains(player.toLowerCase())) {
+          if (player=="" || res.player1.toLowerCase().contains(player.toLowerCase()))
+          json.text+= "${res.player1} has won the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
+          else
+            json.text+= "${res.player2} has won the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
+        } else {
+          if (res.player1.toLowerCase().contains(player.toLowerCase()))
+          json.text+= "${res.player1} has lost the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
+          else
+            json.text+= "${res.player2} has lost the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
+        }
+        nb++;
+        if (nb&gt;=maxNb) {
+          break;
+        } else if (json.text!="") {
+          json.text += ", "
+        }
+      }
+    }
+    } catch (e) {
+      json.text = "Error filtering results"
+      json.error = e.getMessage()
+      json.exception = e.getStackTrace().toString()
+    }
     return json;
   }
 }

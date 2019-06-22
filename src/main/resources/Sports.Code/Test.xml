@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xwikidoc version="1.3" reference="Sports.Code.JSON" locale="">
+<xwikidoc version="1.3" reference="Sports.Code.Test" locale="">
   <web>Sports.Code</web>
-  <name>JSON</name>
+  <name>Test</name>
   <language/>
   <defaultLanguage>en</defaultLanguage>
   <translation>0</translation>
@@ -19,16 +19,22 @@
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
   <content>{{groovy}}
-  import groovy.json.JsonOutput;
+def code = xwiki.parseGroovyFromPage("Sports.Code.Groovy");
+{{/groovy}}
 
-  def player = ""
-  if (request.player)
-   player = request.player
+{{groovy}}
+def code = xwiki.parseGroovyFromPage("Sports.Code.Tennis");
+{{/groovy}}
 
-  def sg = xwiki.parseGroovyFromPage("Sports.Code.Groovy")
-  sg.setXWiki(xwiki, xcontext, services)
-  sg.loadSources()
-  def json = sg.getResults(player, request.sport, request.type)
-  print "{{{${JsonOutput.toJson(json)}}}}"
+{{groovy}}
+def code = xwiki.parseGroovyFromPage("Sports.Code.Football");
+{{/groovy}}
+
+{{groovy}}
+def code = xwiki.parseGroovyFromPage("Sports.Code.Top14");
+{{/groovy}}
+
+{{groovy}}
+def code = xwiki.parseGroovyFromPage("Sports.Code.VolleyBall");
 {{/groovy}}</content>
 </xwikidoc>
