@@ -29,7 +29,7 @@ public class Soccer {
   def request;
   def response;
   def sports;
-  
+
   def addDebug(str) {
     sports.addDebug(str);
   }
@@ -41,82 +41,11 @@ public class Soccer {
     this.response = xcontext.response;
     this.sports = sports;
   }
-  
-  /*
-  def saveResults(games, source) {
-    def className = "Sports.Football.Games.Code.GamesClass";
-    for (g in games) {
-      def player1PageName = saveTeam(g.player1, source.playerSpace)
-      def player2PageName = saveTeam(g.player2, source.playerSpace)
-      def winnerPageName = saveTeam(g.winner, source.playerSpace)
-      addDebug("Ready to save game " + player1PageName + " " + player2PageName + " " + winnerPageName)
-      if (player1PageName==null || player2PageName==null) {
-        addDebug("No saving")
-        continue;
-      }
-      def sid = "${source.competition}${source.year}${g.player1}${g.player2}"
-      def id = sid.hashCode()
-      if (id&lt;0) id=-id
-      def gamePageName = "${source.gameSpace}.${id}";
-      def sgamePageName = gamePageName.toString()
-      def gameDoc = xwiki.getDocument(sgamePageName)
-      if (gameDoc.isNew()||gameDoc.getObject(className)) {
-          def needsSave = false;
-          gameDoc.use(gameDoc.getObject(className, true))
-          if (gameDoc.getValue("team1")!= player1PageName) {
-             gameDoc.set("team1", player1PageName);
-             addDebug("player1 changed")
-             needsSave = true;
-          }
-          if (gameDoc.getValue("team2")!= player2PageName) {
-             gameDoc.set("team2", player2PageName);
-             addDebug("player2 changed")
-             needsSave = true;
-          }
-          if (g.winner &amp;&amp; g.winner!="" &amp;&amp; gameDoc.getValue("winner")!= winnerPageName) {
-             gameDoc.set("winner", winnerPageName);
-             addDebug("winner changed")
-             needsSave = true;
-          }
-          if (g.score &amp;&amp; g.score!="" &amp;&amp; gameDoc.getValue("score")!= g.score) {
-             addDebug("score changed")
-             gameDoc.set("score", g.score);
-             needsSave = true;
-          }       
-          def df = DateTimeFormat.forPattern('yyyy dd MMM HH:mm').withLocale(new Locale("en"))
-          def currentDate = gameDoc.display("gameDate")
-          def sdate = source.year + " " + g.date + " " + g.time;
-          gameDoc.set("gameDate", df.parseDateTime(sdate).toDate())
-          def newDate = gameDoc.display("gameDate")
-          if (g.date &amp;&amp; g.date!="" &amp;&amp; currentDate!=newDate) {
-             addDebug("gameDate changed")
-             needsSave = true;
-          }
-          if (gameDoc.getValue("competition")!= source.competition) {
-             addDebug("competition changed")
-             gameDoc.set("competition", source.competition);
-             needsSave = true;
-          }
-          def currentYear = gameDoc.display("year")
-          gameDoc.set("year", source.year);
-          def newYear = gameDoc.display("year")
-          if (currentYear!=newYear) {
-             addDebug("year changed")
-             needsSave = true;
-          }
-          if (needsSave) {
-             addDebug("Saving game ${sgamePageName}")
-             gameDoc.save("Creating game")
-          }
-       }
-    }
-  }
-  */
-  
+
   def cleanScore(score) {
     return score.replaceAll("\\u2013", " ");
   }
-  
+
   def getResults(data, currentPlayer, source) {
     def cacheId = data.hashCode();
     def games = []
@@ -144,29 +73,49 @@ public class Soccer {
 }}
 */
       def df = DateTimeFormat.forPattern('d-MMM-yyyy-HH:mm').withLocale(new Locale("fr"))
-      def m = data =~ /(?ms)\{\{Feuille de match.*?\n(.*?)\n\}\}/
+      def m = data =~ /(?ms)\{\{(Feuille de match|Footballbox).*?\n(.*?)\n\}\}/
       addDebug("Found: " + m.count + " items");
        (0..&lt;m.count).each {
-         def matchData = m[it][1];
+         def matchData = m[it][2];
          def matchMap = [:]
          def m2 = matchData =~ /\|(.*?)=(.*)/
          (0..&lt;m2.count).each {
             matchMap.put(m2[it][1].trim(), m2[it][2].trim())
          }
+         addDebug("Map: ${matchMap}")
          def game = [:]
-         def p1m = (matchMap.get("\u00e9quipe 1") =~ /.*?\{\{(.*?)\s.*/)
+         def p1m = (matchMap.get("\u00e9quipe 1") =~ /.*?\{\{([a-zA-Z][a-zA-Z][a-zA-Z]).*/)
          game.player1 = p1m.count&gt;0 ? p1m[0][1] : ""
-         def p2m = (matchMap.get("\u00e9quipe 2") =~ /.*?\{\{(.*?)\s.*/)
-         if (game.player1.contains("drapeau"))
+         def p2m = (matchMap.get("\u00e9quipe 2") =~ /.*?\{\{([a-zA-Z][a-zA-Z][a-zA-Z]).*/)
+         if (game.player1.contains("dra"))
           game.player1 = "TBD"
          game.player2 = p2m.count&gt;0 ? p2m[0][1] : ""
-         if (game.player2.contains("drapeau"))
+         if (game.player2.contains("dra"))
           game.player2 = "TBD"
-         game.score = matchMap.get("score")
-         def dm = (matchMap.get("date") =~ /\{\{date\|(.*?\|.*?\|.*?\|).*?/)
-         def sdate = (dm.count&gt;0) ? (dm[0][1].replaceAll("\\|", "-") + matchMap.get("heure")) : ""
-         if (sdate!="")
-           game.gameDate = df.parseDateTime(sdate).toDate()
+         if (game.player1!="TBD" || game.player2!="TBD") {
+          game.score = matchMap.get("score")
+         if (game.score=="-")
+           game.score = ""
+         if (game.score=="") {
+           game.future = true;
+         } else {
+           // we consider that if the score is there, then the game is finished.
+           // this will need to be verified.
+           game.finished = true;
+         }
+         def dm = (matchMap.get("date") =~ /\{\{date.*?\|(.*?\|.*?\|.*?\|).*?/)
+         def hm = (matchMap.get("heure") =~ /.*?([0-9][0-9].[0-9][0-9]).*/)
+
+         def sheure = (hm.count&gt;0) ? hm[0][1] : ""
+         def sdate = (dm.count&gt;0) ? (dm[0][1].replaceAll("\\|", "-") + sheure) : ""
+         if (sdate!="") {
+           addDebug("Found date: ${sdate}")
+           try {
+            game.gameDate = df.parseDateTime(sdate).toDate()
+           } catch (e) {
+             addDebug("Failed to parse date ${sdate} ${sheure}")
+           }
+         }
          def sm = game.score =~ /([0-9]*?)\s.*?\s([0-9]?)/
          def goal1 = (sm.count==0 || sm[0][1].trim()=="") ? 0 : Integer.parseInt(sm[0][1])
          def goal2 = (sm.count==0 || sm[0][2].trim()=="") ? 0 : Integer.parseInt(sm[0][2])
@@ -174,8 +123,9 @@ public class Soccer {
             game.winner = game.player1
          if (goal2&gt;goal1)
             game.winner = game.player2
-         games.add(game) 
+         games.add(game)
          addDebug("Found: ${game}")
+         }
        }
 
       sports.cache.put(cacheId, games);

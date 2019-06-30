@@ -28,7 +28,10 @@
   def sg = xwiki.parseGroovyFromPage("Sports.Code.Groovy")
   sg.setXWiki(xwiki, xcontext, services)
   sg.loadSources()
-  def json = sg.getResults(player, request.sport, request.type)
+  def lastNb = (request.lastNb) ? Integer.parseInt(request.lastNb) : 1;
+  def nextNb = (request.nextNb) ? Integer.parseInt(request.nextNb) : 1;
+  def param = (request.competition) ? (request.sport ? "${request.sport} ${request.competition}" : request.competition) : request.sport;
+  def json = sg.getResults(player, param, request.type, lastNb, nextNb)
   print "{{{${JsonOutput.toJson(json)}}}}"
 {{/groovy}}</content>
 </xwikidoc>

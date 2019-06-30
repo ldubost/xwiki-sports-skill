@@ -29,7 +29,7 @@ public class Rugby {
   def request;
   def response;
   def sports;
-  
+
   def addDebug(str) {
     sports.addDebug(str);
   }
@@ -41,7 +41,7 @@ public class Rugby {
     this.response = xcontext.response;
     this.sports = sports;
   }
-  
+
   def cleanScore(score) {
     return score.replaceAll("\\u2013", " ");
   }
@@ -139,6 +139,11 @@ public class Rugby {
            score1 = (score1==null) ? "" : score1.replaceAll("'","").trim()
            def score2 = matchMap.get(gameName + "-S2");
            score2 = (score2==null) ? "" : score2.replaceAll("'","").trim()
+           if (score1=="" &amp;&amp; score2=="") {
+             game.future = true;
+           } else {
+             game.finished = true;
+           }
            game.score = score1 + " - " + score2
            def goal1 = (score1=="") ? 0 : Integer.parseInt(score1)
            def goal2 = (score2=="") ? 0 : Integer.parseInt(score2)

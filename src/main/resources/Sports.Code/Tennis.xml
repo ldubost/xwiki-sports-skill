@@ -92,6 +92,9 @@ public class Tennis {
           }
         } else {
           def score = m[it][3]
+          if (score.trim()=="") {
+            game.future = true;
+          }
           def regex1 = /score[0-9]+-([0-9])/
           def m1 = m[it][2] =~ regex1
           if (m1 &amp;&amp; m1.count&gt;0) {
@@ -111,20 +114,26 @@ public class Tennis {
               else if (currentSet.player2&gt;currentSet.player1){
                 set["player2"] = (set["player2"]==null) ? 1 : set["player2"]+1;
               }
-              if (currentSet.player1==-1)
-              game.winner = game.player2
-              if (currentSet.player2==-1)
-              game.winner = game.player1
+              if (currentSet.player1==-1) {
+                 game.winner = game.player2
+                 game.finished = true;
+              } else if (currentSet.player2==-1) {
+                 game.winner = game.player1
+                 game.finished = true;
+              }
 
-              if (set["player1"]==3 || (set["player1"]==2 &amp;&amp; request.type=="1"))
-              game.winner = game.player1
-              if (set["player2"]==3 || (set["player2"]==2 &amp;&amp; request.type=="1"))
-              game.winner = game.player2
+              if (set["player1"]==3 || (set["player1"]==2 &amp;&amp; request.type=="1")) {
+                 game.winner = game.player1
+                 game.finished = true;
+              } else if (set["player2"]==3 || (set["player2"]==2 &amp;&amp; request.type=="1")) {
+                 game.winner = game.player2
+                 game.finished = true;
+              }
             }
             if (!player1) {
               if (currentSet.player1&gt;0 || currentSet.player2&gt;0) {
                 if (!game.score)
-                game.score = "";
+                  game.score = "";
                 else
                   game.score += " ";
                 game.score += currentSet.player1 + " " + currentSet.player2

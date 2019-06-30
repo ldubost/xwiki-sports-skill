@@ -71,10 +71,15 @@ public class VolleyBall {
          if (set1!="" &amp;&amp; set2!="") {
            def iset1 = Integer.parseInt(set1)
            def iset2 = Integer.parseInt(set2)
-           if (iset1&gt;iset2)
+           if (iset1&gt;iset2) {
             game.winner = game.player1
-           if (iset2&gt;iset1)
+            game.finished = true;
+           } else if (iset2&gt;iset1) {
             game.winner = game.player2
+            game.finished = true;
+           }
+         } else {
+            game.future = true;
          }
          games.add(game)
       }

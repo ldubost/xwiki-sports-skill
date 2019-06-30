@@ -31,19 +31,32 @@ require(['jquery'], function($) {
     synth.speak(utterThis);
   }
 
-  function go(form) {
+  function go(form, select) {
+     var sport = "";
+     var competition = "";
+     var year = "2019";
+     var type = "0";
+     var url;
+     if (select) {
        var regex = /(.*?)-(.*?)-(.*?)-(.*)/;
        var found = form.sport.value.match(regex);
 
-       var sport = found[1].replace("vb", "volley-ball");
-       var competition = found[2];
-       var year = found[3];
-       var type = found[4];
+       sport = found[1].replace("vb", "volley-ball");
+       competition = found[2];
+       year = found[3];
+       type = found[4];
+       url = "/xwiki/bin/get/Sports/Code/JSON?outputSyntax=plain&amp;type=" + type + "&amp;year=" + year + "&amp;sport="+ sport + "&amp;competition=" + competition + "&amp;player=" + encodeURIComponent(form.player.value) + "&amp;lastNb=" + form.lastNb.value + "&amp;nextNb=" + form.nextNb.value;
+     } else {
+       sport = form.sport.value;
+       if (form.type.checked)
+        type = "1"
+       url = "/xwiki/bin/get/Sports/Code/JSON?outputSyntax=plain&amp;type=" + type + "&amp;year=" + year + "&amp;sport="+ sport + "&amp;player=" + encodeURIComponent(form.player.value) + "&amp;lastNb=" + form.lastNb.value + "&amp;nextNb=" + form.nextNb.value;
+     }
        speak("Retrieving " + sport + " results for player " + form.player.value);
-       var url = "/xwiki/bin/get/Sports/Code/JSON?outputSyntax=plain&amp;type=" + type + "&amp;year=" + year + "&amp;sport="+ sport + "&amp;competition=" + competition + "&amp;player=" + encodeURIComponent(form.player.value) + "&amp;nb=" + form.nb.value;
        if (form.save &amp;&amp; form.save.checked)
         url += "&amp;save=1";
        console.log("URL: " + url)
+       $("#results").html($("#results").html() + "&lt;br /&gt;&lt;a href='" +  url + "'&gt;" + url + "&lt;/a&gt;");
        $.getJSON(url, function(result) {
            console.log(result);
            if (!result || !result.text || result.text=="")
@@ -53,31 +66,50 @@ require(['jquery'], function($) {
        }).error(function() { speak("An error occured while retrieving results")});
   }
   window.go = go;
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () =&gt; {
+      navigator.serviceWorker.register("$xwiki.getDocument("Sports.Code.ServiceWorker").getURL("jsx")")
+          .then((reg) =&gt; {
+            console.log('Service worker registered.', reg);
+          });
+    });
+  }
 });
 &lt;/script&gt;
-&lt;form action="" onsubmit="window.go(this); return false;"&gt;
-Player or Team: &lt;input type="text" name="player" value="" /&gt;
-   &lt;select name="sport"&gt;
+&lt;form action="" onsubmit="window.go(this, true); return false;"&gt;
+&lt;dt&gt;Player or Team:&lt;/dt&gt;&lt;dd&gt;&lt;input type="text" name="player" value="" /&gt;&lt;/dd&gt;
+&lt;dt&gt;Competition:&lt;/dt&gt;&lt;dd&gt;&lt;select name="sport"&gt;&lt;/dd&gt;
 #set($sg = $xwiki.parseGroovyFromPage("Sports.Code.Groovy"))
 #set($ok = $sg.setXWiki($xwiki, $xcontext, $services))
 #set($sources = $sg.loadSources(false))
-$sources
+#set($previousTitle = $source.title)
    #foreach($source in $sources)
+     #if($previousTitle!=$source.title)
+      #set($previousTitle = $source.title)
      &lt;option value="${source.sport}-${source.competition}-${source.year}-${source.type}"&gt;${source.title}&lt;/option&gt;
+     #end
    #end
-   &lt;/select&gt;
-   &lt;select name="nb"&gt;
-     &lt;option value="1"&gt;1 result&lt;/option&gt;
-     &lt;option value="2"&gt;2 results&lt;/option&gt;
-     &lt;option value="3"&gt;3 results&lt;/option&gt;
-     &lt;option value="4"&gt;4 results&lt;/option&gt;
-     &lt;option value="5"&gt;5 results&lt;/option&gt;
-   &lt;/select&gt;
+   &lt;/select&gt;&lt;br /&gt;
+   Number of results: &lt;input type="text" name="lastNb" value="1" size="2" /&gt;&lt;br /&gt;
+   Number of next games: &lt;input type="text" name="nextNb" value="1" size="2" /&gt;&lt;br /&gt;
   #if($hasAdmin)
-  &lt;input type="checkbox" name="save" value="1" /&gt; Save pages
+  &lt;input type="checkbox" name="save" value="1" /&gt; Save pages&lt;br /&gt;
   #end
   &lt;input type="submit" value="Go" class="button"/&gt;
-  &lt;br /&gt;
+  &lt;br /&gt;&lt;br /&gt;
+&lt;/form&gt;
+&lt;form action="" onsubmit="window.go(this, false); return false;"&gt;
+Player or Team: &lt;input type="text" name="player" value="" /&gt;&lt;br /&gt;
+Sport or Competition &lt;input type="text" name="sport" value="" /&gt;&lt;br /&gt;
+&lt;input type="checkbox" name="type" value="1"/&gt; Women&lt;br /&gt;
+Number of results: &lt;input type="text" name="lastNb" value="1" size="2" /&gt;&lt;br /&gt;
+Number of next games: &lt;input type="text" name="nextNb" value="1" size="2" /&gt;&lt;br /&gt;
+  #if($hasAdmin)
+  &lt;input type="checkbox" name="save" value="1" /&gt; Save pages&lt;br /&gt;
+  #end
+  &lt;input type="submit" value="Go" class="button"/&gt;
+  &lt;br /&gt;&lt;br /&gt;
 &lt;/form&gt;
 &lt;div id="results"&gt;
 &lt;/div&gt;

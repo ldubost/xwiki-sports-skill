@@ -30,6 +30,7 @@ public class Sports {
   def request;
   def response;
   def services;
+  def countries;
   def codeGroovy;
 
   def debug = "";
@@ -67,10 +68,19 @@ public class Sports {
     this.request = xcontext.request;
     this.response = xcontext.response;
     this.services = services;
+    this.countries = xwiki.parseGroovyFromPage("Sports.Code.Countries");
   }
 
   def addSource(source) {
     def key = (source.type) ? "${source.sport}-${source.type}" : source.sport;
+    if (sources.get(key)==null) {
+      sources.put(key, source)
+    }
+    key = (source.type) ? "${source.competition}-${source.type}" : source.competition;
+    if (sources.get(key)==null) {
+      sources.put(key, source)
+    }
+    key = (source.type) ? "${source.sport} ${source.competition}-${source.type}" : "${source.sport}-${source.competition}";
     if (sources.get(key)==null) {
       sources.put(key, source)
     }
@@ -206,12 +216,17 @@ public class Sports {
   }
 
 
-  def getResults(player, sport, type) {
+  def getResults(player, sport, type, lastNb, nextNb) {
     startTime()
     def source = getSource(sport, type);
     if (source==null) {
-       addDebug("No matching source for " + sport + " and type " + type)
-       return ["text": "No matching source for " + sport + " and type " + type];
+      addDebug("No matching source for " + sport + " and type " + type)
+      return ["text": "No matching source for " + sport + " and type " + type];
+    }
+    if (source.useCountryCode) {
+      addDebug("Converting " + player)
+      player = countries.getCountryCode(player);
+      addDebug("New player " + player)
     }
     codeGroovy = xwiki.parseGroovyFromPage(source.code)
     codeGroovy.setXWiki(xwiki, xcontext, this)
@@ -224,86 +239,130 @@ public class Sports {
       saveGames(games, source)
     }
     addTime("save")
-    def json = filterResults(games, player)
+    def json = filterResults(games, player, lastNb, nextNb)
     endTime("filter")
     json.times = times;
     json.source = source;
     if (request.debug)
-      json.debug = debug;
+    json.debug = debug;
     return json;
   }
 
-  def filterResults(games, player) {
+  def getGameName(level) {
+    def gameName = "game"
+    if (level=="Q")
+    gameName = "Quarter-final"
+    else if (level=="D")
+      gameName = "Semi-final"
+    else if (level=="S")
+      gameName = "Semi-final"
+    if (level=="F")
+    gameName = "Final"
+    return gameName
+  }
+
+  def filterResults(games, player, lastNb, nextNb) {
     def json = [:]
     try {
-    def results = []
-    for (g in games) {
-      if (player=="") {
-        results.add(g)
+      def results = []
+      for (g in games) {
+        if (player=="") {
+          results.add(g)
+        }
+        else if ((g.player1!=null &amp;&amp; g.player1.toLowerCase().contains(player.toLowerCase()))||(g.player2!=null) &amp;&amp; g.player2.toLowerCase().contains(player.toLowerCase()))
+          results.add(g)
       }
-      else if ((g.player1!=null &amp;&amp; g.player1.toLowerCase().contains(player.toLowerCase()))||(g.player2!=null) &amp;&amp; g.player2.toLowerCase().contains(player.toLowerCase()))
-        results.add(g)
-    }
-    def df = DateTimeFormat.forPattern("dd/MMM/yyyy").withLocale(new Locale("en"))
-    def nb = 0;
-    def maxNb = (request.nb) ? Integer.parseInt(request.nb) : 1;
-    def myresults = results.reverse()
-    json.results = myresults;
-    json.text = "";
-    def nextGameAdded = false;
-    for (res in json.results) {
-      if (res.gameDate &amp;&amp; res.gameDate!="")
-       res.formattedDate = df.print(res.gameDate);
-    }
-    for (res in json.results) {
-      res.gameDate = "";
-      def gameName = "game"
-      if (res.level=="Q")
-      gameName = "Quarter-final"
-      else if (res.level=="D")
-        gameName = "Semi-final"
-      if (res.level=="F")
-      gameName = "Final"
+      def df = DateTimeFormat.forPattern("dd/MMM/yyyy").withLocale(new Locale("en"))
+      def currentNextNb = 0;
+      def currentLastNb = 0;
+      json.nextGames = []
+      json.lastResults = []
+      json.nextGamesTexts = []
+      json.lastResultsTexts = []
 
-      if (res.winner==null) {
-        if (res.score==null||res.score.trim()=="") {
-          if (gameName=="game") {
-            json.text = "The next game is ${res.player1} against ${res.player2}"
+      json.text = "";
+      def nextGameAdded = false;
+      for (res in results) {
+        if (res.gameDate &amp;&amp; res.gameDate!="")
+        res.formattedDate = df.print(new DateTime(res.gameDate));
+      }
+
+      // We should sort the results by gameDate if it's there
+      results.sort { it.gameDate }
+
+      for (res in results) {
+        def gameName = getGameName(res.level)
+
+        if (res.future) {
+          // Handling the case of a future game
+          if (currentNextNb&lt;nextNb) {
+            currentNextNb++;
+            def message = ""
+            if (gameName=="game") {
+              message = "The next game is ${res.player1} against ${res.player2}"
+            } else
+              message = "The next game is the ${gameName} ${res.player1} against ${res.player2}, "
             if (res.formattedDate) {
-              json.text += " on ${res.formattedDate}"
+              message += " on ${res.formattedDate}"
             }
-            json.text += ", "
-          } else
-            json.text = "The next game is the ${gameName} ${res.player1} against ${res.player2}, "
-        } else {
-          json.text+= "The score of ${res.player1} against ${res.player2} is currently ${res.score}"
-          nb++;
-          if (nb&gt;=maxNb) {
-            break;
-          } else if (json.text!="") {
-            json.text += ", "
+            json.nextGamesTexts.add(message)
           }
-        }
-      } else {
-        if (player=="" || res.winner.toLowerCase().contains(player.toLowerCase())) {
-          if (player=="" || res.player1.toLowerCase().contains(player.toLowerCase()))
-          json.text+= "${res.player1} has won the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
-          else
-            json.text+= "${res.player2} has won the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
-        } else {
-          if (res.player1.toLowerCase().contains(player.toLowerCase()))
-          json.text+= "${res.player1} has lost the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
-          else
-            json.text+= "${res.player2} has lost the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
-        }
-        nb++;
-        if (nb&gt;=maxNb) {
-          break;
-        } else if (json.text!="") {
-          json.text += ", "
+          json.nextGames.add(res)
         }
       }
-    }
+      def myresults = results.reverse()
+      for (res in myresults) {
+        def gameName = getGameName(res.level)
+        if (res.finished) {
+          // Handling the case of a finished game
+          if (currentLastNb&lt;lastNb) {
+            currentLastNb++;
+            def message = ""
+
+            if (res.winner==null) {
+              message = "${res.player1} and ${res.player2} have tied in the ${gameName} with score ${res.score}"
+            }  else {
+              if (res.winner==res.player1) {
+                message = "${res.player1} has won the ${gameName} against ${res.player2} ${res.score}"
+              } else {
+                message = "${res.player1} has lost the ${gameName} against ${res.player2} ${res.score}"                
+              }
+            }
+            /*
+            else if (player=="" || res.winner.toLowerCase().contains(player.toLowerCase())) {
+              if (player=="" || res.player1.toLowerCase().contains(player.toLowerCase()))
+              message = "${res.player1} has won the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
+              else
+                message = "${res.player2} has won the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
+            } else {
+              if (res.player1.toLowerCase().contains(player.toLowerCase()))
+              message= "${res.player1} has lost the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
+              else
+                message = "${res.player2} has lost the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
+            }
+            */
+            if (res.formattedDate) {
+              message += " on ${res.formattedDate}"
+            }
+            json.lastResultsTexts.add(message)
+          }
+          json.lastResults.add(res)
+        } else if (!res.future) {
+          // Handling the case of a game in progress (not future, not finished)
+          if (currentLastNb&lt;lastNb) {
+            currentLastNb++;
+            def message = ""
+
+            message = "${res.player1} against ${res.player2} has current score ${res.score}"
+            if (res.formattedDate) {
+              message += " on ${res.formattedDate}"
+            }
+            json.lastResultsTexts.add(message)
+          }
+          json.lastResults.add(res)
+        }
+      }
+      json.text = json.lastResultsTexts.join(", ") + " " + json.nextGamesTexts.join(", ")
     } catch (e) {
       json.text = "Error filtering results"
       json.error = e.getMessage()
