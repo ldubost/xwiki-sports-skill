@@ -93,6 +93,7 @@ public class Sports {
 
   def loadSources(force) {
     if (sources.size()==0||force) {
+      sources = [:]
       def sourcePages = services.query.xwql("select doc.fullName from Document doc, doc.object(Sources.Code.SourcesClass) as item where doc.name&lt;&gt;'SourcesTemplate'").execute();
       for (sourcePage in sourcePages) {
         addSource(loadSource(sourcePage));
@@ -106,7 +107,7 @@ public class Sports {
     def sportDoc = xwiki.getDocument(sourceDoc.getValue("sport"))
     def competitionDoc = xwiki.getDocument(sourceDoc.getValue("competition"))
     def sportSpace = sportDoc.getSpace();
-    def source = ["title" : sourceDoc.title, "url" : sourceDoc.getValue("url"), "sportPage" : sourceDoc.getValue("sport"), "competitionPage" : sourceDoc.getValue("competition"), "year" : sourceDoc.getValue("year"), "gameSpace" : "${sportSpace}.Games", "playerSpace" : "${sportSpace}.Players", "type" : "0"]
+    def source = ["title" : sourceDoc.title, "url" : sourceDoc.getValue("url"), "sportPage" : sourceDoc.getValue("sport"), "competitionPage" : sourceDoc.getValue("competition"), "year" : sourceDoc.getValue("year"), "gameSpace" : "${sportSpace}.Games", "playerSpace" : "${sportSpace}.Players", "type" : "0", "startDate" : sourceDoc.getValue("startDate"), "endDate" : sourceDoc.getValue("endDate")]
     def options = sourceDoc.getValue("parameters")
     if (options &amp;&amp; options.trim()!="") {
       def jsonSlurper = new JsonSlurper()
@@ -215,8 +216,11 @@ public class Sports {
     }
   }
 
-
   def getResults(player, sport, type, lastNb, nextNb) {
+    return getResults(player, sport, type, lastNb, nextNb, false);
+  }
+  
+  def getResults(player, sport, type, lastNb, nextNb, save) {
     startTime()
     def source = getSource(sport, type);
     if (source==null) {
@@ -235,7 +239,7 @@ public class Sports {
     addTime("source")
     def games = codeGroovy.getResults(data, player, source)
     addTime("results")
-    if (request.save) {
+    if (save || request.save) {
       saveGames(games, source)
     }
     addTime("save")
@@ -243,8 +247,8 @@ public class Sports {
     endTime("filter")
     json.times = times;
     json.source = source;
-    if (request.debug)
-    json.debug = debug;
+    if (request!=null &amp;&amp; request.debug)
+     json.debug = debug;
     return json;
   }
 
@@ -369,6 +373,31 @@ public class Sports {
       json.exception = e.getStackTrace().toString()
     }
     return json;
+  }
+
+  def monitor(logPage) {
+    try {
+      def handledSources = []
+      def sources = loadSources(true);
+      def currentDate = new Date();
+      for (source in sources.values()) {
+        if (!handledSources.contains(source.url)) {
+          // addDebug("Sources " + source.startDate + " - " + source.endDate)
+          handledSources.add(source.url)
+          if (currentDate&gt;source.startDate &amp;&amp; currentDate &lt; source.endDate) {
+             addDebug("Source should be monitored: " + source.title)
+             getResults("", source.competition, source.type, 0, 0, true)
+          }
+        }
+      }
+    } catch (e) {
+      addDebug("Exception: " + e)
+      addDebug(e.getStackTrace().toString())
+    } finally {
+      def logDoc = xwiki.getDocument(logPage);
+      logDoc.setContent(debug)
+      logDoc.save("Ran monitoring")
+    }
   }
 }
 // {{/groovy}}</content>

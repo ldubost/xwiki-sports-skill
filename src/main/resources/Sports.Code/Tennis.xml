@@ -52,11 +52,11 @@ public class Tennis {
       return Integer.parseInt(s.trim());
   }
 
-  def getAllResults(data, currentPlayer, roundMap) {
+  def getAllResults(source, data, currentPlayer, roundMap) {
     def cacheId = data.hashCode();
     def games = []
 
-    if (sports.cache.get(cacheId)!=null &amp;&amp; !request.force) {
+    if (sports.cache.get(cacheId)!=null &amp;&amp; (request!=null &amp;&amp; !request.force)) {
       addDebug("From cache");
       games = sports.cache.get(cacheId);
     } else {
@@ -72,8 +72,14 @@ public class Tennis {
           addDebug("In player")
           player1 = !player1
           if (player1) {
-            if (game.player1!=null)
-            games.add(game);
+            if (game.player1!=null) {
+              if (game.score==null || game.score.trim()=="") {
+                if (game.score==null)
+                  game.score = ""
+                game.future = true;
+              }
+              games.add(game);
+            }
             game = [:]
             set = [:]
           }
@@ -92,9 +98,6 @@ public class Tennis {
           }
         } else {
           def score = m[it][3]
-          if (score.trim()=="") {
-            game.future = true;
-          }
           def regex1 = /score[0-9]+-([0-9])/
           def m1 = m[it][2] =~ regex1
           if (m1 &amp;&amp; m1.count&gt;0) {
@@ -122,10 +125,10 @@ public class Tennis {
                  game.finished = true;
               }
 
-              if (set["player1"]==3 || (set["player1"]==2 &amp;&amp; request.type=="1")) {
+              if (set["player1"]==3 || (set["player1"]==2 &amp;&amp; source.type=="1")) {
                  game.winner = game.player1
                  game.finished = true;
-              } else if (set["player2"]==3 || (set["player2"]==2 &amp;&amp; request.type=="1")) {
+              } else if (set["player2"]==3 || (set["player2"]==2 &amp;&amp; source.type=="1")) {
                  game.winner = game.player2
                  game.finished = true;
               }
@@ -137,18 +140,26 @@ public class Tennis {
                 else
                   game.score += " ";
                 game.score += currentSet.player1 + " " + currentSet.player2
+              } else {
+                game.score = ""
               }
             }
             game.set = set;
           }
         }
-      } 
+      }
+      if (game.score==null || game.score.trim()=="") {
+            if (game.score==null)
+               game.score = ""
+            game.future = true;
+      }
+
       // Adding the last game
       games.add(game);
       sports.cache.put(cacheId, games);
     }
 
-    if (request.debug) {
+    if (request!=null &amp;&amp; request.debug) {
       for (g in games) {
         addDebug("{{{ Game: ${g} }}}")
         addDebug("* Player1: ${g.player1}")
@@ -166,15 +177,15 @@ public class Tennis {
     def regex2 = (data =~ /(?ms)(===Top half===.*)/)
     def data1 = (regex1!=null &amp;&amp; regex1.size()&gt;0) ? regex1[0][1] : ""
     def data2 = (regex2!=null &amp;&amp; regex2.size()&gt;0) ? regex2[0][1] : ""
-    if (request.debug) {
+    if (request!=null &amp;&amp; request.debug) {
       addDebug("""Data1""")
       addDebug("""{{{ ${data1 }}}}""")
       addDebug("""Data2""")
       addDebug("""{{{ ${data2 }}}}""")
     }
-    def games1 = getAllResults(data1, player, ["RD1" : "Q", "RD2" : "S", "RD3" : "F"]);
-    def games2 = getAllResults(data2, player, [:]);
-    if (request.debug) {
+    def games1 = getAllResults(source, data1, player, ["RD1" : "Q", "RD2" : "S", "RD3" : "F"]);
+    def games2 = getAllResults(source, data2, player, [:]);
+    if (request!=null &amp;&amp; request.debug) {
       addDebug("""Results1: {{{ ${games1 }}}}""");
       addDebug("""Results2: {{{ ${games2 }}}}"""); 
     }

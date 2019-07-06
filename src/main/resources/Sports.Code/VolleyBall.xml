@@ -49,7 +49,7 @@ public class VolleyBall {
     def cacheId = data.hashCode();
     def games = []
 
-    if (sports.cache.get(cacheId)!=null &amp;&amp; !request.force) {
+    if (sports.cache.get(cacheId)!=null &amp;&amp; (request!=null &amp;&amp; !request.force)) {
       addDebug("From cache");
       games = sports.cache.get(cacheId);
     } else {

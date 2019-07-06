@@ -67,16 +67,17 @@ require(['jquery'], function($) {
   }
   window.go = go;
 
-  if ('serviceWorker' in navigator) {
+  /* if ('serviceWorker' in navigator) {
     window.addEventListener('load', () =&gt; {
-      navigator.serviceWorker.register("$xwiki.getDocument("Sports.Code.ServiceWorker").getURL("jsx")")
+      navigator.serviceWorker.register("$xwiki.getDocument("Sports.Code.ServiceWorker").getURL("jsx")", { "scope" : "/" })
           .then((reg) =&gt; {
             console.log('Service worker registered.', reg);
           });
     });
-  }
+  } */
 });
 &lt;/script&gt;
+&lt;div class="col-sm-6"&gt;
 &lt;form action="" onsubmit="window.go(this, true); return false;"&gt;
 &lt;dt&gt;Player or Team:&lt;/dt&gt;&lt;dd&gt;&lt;input type="text" name="player" value="" /&gt;&lt;/dd&gt;
 &lt;dt&gt;Competition:&lt;/dt&gt;&lt;dd&gt;&lt;select name="sport"&gt;&lt;/dd&gt;
@@ -91,27 +92,28 @@ require(['jquery'], function($) {
      #end
    #end
    &lt;/select&gt;&lt;br /&gt;
-   Number of results: &lt;input type="text" name="lastNb" value="1" size="2" /&gt;&lt;br /&gt;
-   Number of next games: &lt;input type="text" name="nextNb" value="1" size="2" /&gt;&lt;br /&gt;
+&lt;dt&gt;Number of results:&lt;/dt&gt;&lt;dd&gt;&lt;input type="text" name="lastNb" value="1" size="2" /&gt;&lt;/dd&gt;
+&lt;dt&gt;Number of next games:&lt;/dt&gt;&lt;dd&gt;&lt;input type="text" name="nextNb" value="1" size="2" /&gt;&lt;/dd&gt;
   #if($hasAdmin)
-  &lt;input type="checkbox" name="save" value="1" /&gt; Save pages&lt;br /&gt;
+&lt;dd&gt;&lt;input type="checkbox" name="save" value="1" /&gt; Save pages&lt;/dd&gt;
   #end
   &lt;input type="submit" value="Go" class="button"/&gt;
-  &lt;br /&gt;&lt;br /&gt;
 &lt;/form&gt;
+&lt;/div&gt;
+&lt;div class="col-sm-6"&gt;
 &lt;form action="" onsubmit="window.go(this, false); return false;"&gt;
-Player or Team: &lt;input type="text" name="player" value="" /&gt;&lt;br /&gt;
-Sport or Competition &lt;input type="text" name="sport" value="" /&gt;&lt;br /&gt;
-&lt;input type="checkbox" name="type" value="1"/&gt; Women&lt;br /&gt;
-Number of results: &lt;input type="text" name="lastNb" value="1" size="2" /&gt;&lt;br /&gt;
-Number of next games: &lt;input type="text" name="nextNb" value="1" size="2" /&gt;&lt;br /&gt;
+&lt;dt&gt;Player or Team:&lt;/dt&gt;&lt;dd&gt;&lt;input type="text" name="player" value="" /&gt;&lt;/dd&gt;
+&lt;dt&gt;Sport or Competition:&lt;/dt&gt;&lt;dd&gt;&lt;input type="text" name="sport" value="" /&gt;&lt;/dd&gt;
+&lt;dd&gt;&lt;input type="checkbox" name="type" value="1"/&gt; Women&lt;/dd&gt;
+&lt;dt&gt;Number of results:&lt;/dt&gt;&lt;dd&gt;&lt;input type="text" name="lastNb" value="1" size="2" /&gt;&lt;/dd&gt;
+&lt;dt&gt;Number of next games:&lt;dt&gt;&lt;dd&gt;&lt;input type="text" name="nextNb" value="1" size="2" /&gt;&lt;/dd&gt;
   #if($hasAdmin)
-  &lt;input type="checkbox" name="save" value="1" /&gt; Save pages&lt;br /&gt;
+&lt;dd&gt;&lt;input type="checkbox" name="save" value="1" /&gt; Save pages&lt;/dd&gt;
   #end
-  &lt;input type="submit" value="Go" class="button"/&gt;
-  &lt;br /&gt;&lt;br /&gt;
+&lt;dd&gt;&lt;input type="submit" value="Go" class="button"/&gt;&lt;/dd&gt;
 &lt;/form&gt;
-&lt;div id="results"&gt;
+&lt;/div&gt;
+&lt;div class="col-xs-12" id="results"&gt;
 &lt;/div&gt;
 {{/html}}
 {{/velocity}}</content>

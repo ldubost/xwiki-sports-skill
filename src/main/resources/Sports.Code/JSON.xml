@@ -18,7 +18,7 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{groovy}}
+  <content>{{groovy wiki=false}}
   import groovy.json.JsonOutput;
 
   def player = ""
@@ -32,6 +32,6 @@
   def nextNb = (request.nextNb) ? Integer.parseInt(request.nextNb) : 1;
   def param = (request.competition) ? (request.sport ? "${request.sport} ${request.competition}" : request.competition) : request.sport;
   def json = sg.getResults(player, param, request.type, lastNb, nextNb)
-  print "{{{${JsonOutput.toJson(json)}}}}"
+  print JsonOutput.toJson(json)
 {{/groovy}}</content>
 </xwikidoc>
