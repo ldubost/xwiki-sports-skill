@@ -63,7 +63,7 @@
       </competition>
       <endDate>
         <customDisplay>{{include reference="AppWithinMinutes.DateDisplayer" /}}</customDisplay>
-        <dateFormat>dd/MM</dateFormat>
+        <dateFormat>dd/MM/yyyy</dateFormat>
         <disabled>0</disabled>
         <emptyIsToday>0</emptyIsToday>
         <hint/>
@@ -151,7 +151,7 @@
       </sport>
       <startDate>
         <customDisplay>{{include reference="AppWithinMinutes.DateDisplayer" /}}</customDisplay>
-        <dateFormat>dd/MM</dateFormat>
+        <dateFormat>dd/MM/yyyy</dateFormat>
         <disabled>0</disabled>
         <emptyIsToday>0</emptyIsToday>
         <hint/>
@@ -200,7 +200,7 @@
       <competition>Sports.Football.Football WorldCup.WebHome</competition>
     </property>
     <property>
-      <endDate>1970-07-20 00:00:00.0</endDate>
+      <endDate>2019-07-20 00:00:00.0</endDate>
     </property>
     <property>
       <lastFetchDate/>
@@ -215,7 +215,7 @@
       <sport>Sports.Football.WebHome</sport>
     </property>
     <property>
-      <startDate>1970-06-04 00:00:00.0</startDate>
+      <startDate>2019-06-01 00:00:00.0</startDate>
     </property>
     <property>
       <url>https://fr.wikipedia.org/wiki/Coupe_du_monde_f%C3%A9minine_de_football_2019?action=raw</url>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xwikidoc version="1.3" reference="Sports.Football.CAN 2019" locale="">
-  <web>Sports.Football</web>
-  <name>CAN 2019</name>
+<xwikidoc version="1.3" reference="Sports.Tennis.Wimbledon 2019 Women Singles" locale="">
+  <web>Sports.Tennis</web>
+  <name>Wimbledon 2019 Women Singles</name>
   <language/>
   <defaultLanguage>en</defaultLanguage>
   <translation>0</translation>
@@ -14,17 +14,17 @@
   <date>1546297200000</date>
   <contentUpdateDate>1546297200000</contentUpdateDate>
   <version>1.1</version>
-  <title>CAN 2019</title>
+  <title>Wimbledon 2019 Women Singles</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
   <content/>
   <object>
-    <name>Sports.Football.CAN 2019</name>
+    <name>Sports.Tennis.Wimbledon 2019 Women Singles</name>
     <number>0</number>
     <className>Sources.Code.SourcesClass</className>
-    <guid>f3c26d8d-4cdf-46cd-80f3-6b15e74fd12c</guid>
+    <guid>84344962-843d-43ce-acac-9d0983817c82</guid>
     <class>
       <name>Sources.Code.SourcesClass</name>
       <customClass/>
@@ -197,10 +197,10 @@
       </year>
     </class>
     <property>
-      <competition>Competitions.CAN</competition>
+      <competition>Competitions.Wimbledon 2019.WebHome</competition>
     </property>
     <property>
-      <endDate>2019-07-20 00:00:00.0</endDate>
+      <endDate>1970-07-15 00:00:00.0</endDate>
     </property>
     <property>
       <lastFetchDate/>
@@ -209,16 +209,16 @@
       <name/>
     </property>
     <property>
-      <parameters>{ "sport":"football","competition":"african cup","year":"2019","gender":"men", "type" : "0", "code" : "Sports.Code.Football", "useCountryCode" : true }</parameters>
+      <parameters>{ "sport" : "tennis", "competition" : "wimbledon", "year" : "2019", "gender" : "men", "type" : "1",  "code" : "Sports.Code.Tennis" }</parameters>
     </property>
     <property>
-      <sport>Sports.Football.WebHome</sport>
+      <sport>Sports.Tennis.WebHome</sport>
     </property>
     <property>
-      <startDate>2019-06-15 00:00:00.0</startDate>
+      <startDate>1970-07-01 00:00:00.0</startDate>
     </property>
     <property>
-      <url>https://fr.wikipedia.org/wiki/Coupe_d%27Afrique_des_nations_de_football_2019?action=raw</url>
+      <url>https://en.wikipedia.org/wiki/2019_Wimbledon_Championships_%E2%80%93_Women%27s_Singles?action=raw</url>
     </property>
     <property>
       <year>2019-01-01 00:00:00.0</year>
