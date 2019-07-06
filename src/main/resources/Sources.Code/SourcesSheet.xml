@@ -51,7 +51,7 @@
 {{groovy}}
 import groovy.json.JsonOutput;
 
-if (request.query) {
+if (request.query != null) {
     def sg = xwiki.parseGroovyFromPage("Sports.Code.Groovy")
     def json = ""
     try {

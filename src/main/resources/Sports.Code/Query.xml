@@ -59,7 +59,7 @@ require(['jquery'], function($) {
        $("#results").html($("#results").html() + "&lt;br /&gt;&lt;a href='" +  url + "'&gt;" + url + "&lt;/a&gt;");
        $.getJSON(url, function(result) {
            console.log(result);
-           if (!result || !result.text || result.text=="")
+           if (!result || !result.text || result.text.trim()=="")
             speak("No results found")
            else
             speak(result.text);

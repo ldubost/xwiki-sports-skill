@@ -93,6 +93,7 @@ public class Soccer {
          if (game.player2.contains("dra"))
           game.player2 = "TBD"
          if (game.player1!="TBD" || game.player2!="TBD") {
+          game.title = game.player1 + " vs " + game.player2
           game.score = matchMap.get("score")
          if (game.score=="-")
            game.score = ""

@@ -95,6 +95,7 @@ public class Tennis {
             } else {
               game.player2 = splayer
             }
+            game.title = game.player1 + " vs " + game.player2
           }
         } else {
           def score = m[it][3]

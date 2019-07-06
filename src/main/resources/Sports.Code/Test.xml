@@ -36,5 +36,9 @@ def code = xwiki.parseGroovyFromPage("Sports.Code.Top14");
 
 {{groovy}}
 def code = xwiki.parseGroovyFromPage("Sports.Code.VolleyBall");
+{{/groovy}}
+
+{{groovy}}
+def code = xwiki.parseGroovyFromPage("Sports.Code.Cycling");
 {{/groovy}}</content>
 </xwikidoc>

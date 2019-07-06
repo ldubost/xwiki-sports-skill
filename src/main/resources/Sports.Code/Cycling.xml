@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc version="1.3" reference="Sports.Code.Cycling" locale="">
+  <web>Sports.Code</web>
+  <name>Cycling</name>
+  <language/>
+  <defaultLanguage>en</defaultLanguage>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <creationDate>1546297200000</creationDate>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <date>1546297200000</date>
+  <contentUpdateDate>1546297200000</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>// {{groovy}}
+import groovy.json.JsonOutput;
+import org.joda.time.format.DateTimeFormat;
+
+public class Cycling {
+  def xwiki;
+  def xcontext;
+  def request;
+  def response;
+  def sports;
+
+  def addDebug(str) {
+    sports.addDebug(str);
+  }
+
+  def setXWiki(xwiki, xcontext, sports) {
+    this.xwiki = xwiki;
+    this.xcontext = xcontext;
+    this.request = xcontext.request;
+    this.response = xcontext.response;
+    this.sports = sports;
+  }
+
+//      def m = data =~ /(RD[0-9])-(.*?)=(.*)/
+/*
+{{En-tête de tableau Liste des étapes|sources=}}
+|-
+|[[1re étape du Tour de France 2019|{{1re|étape}}]]
+| sam. [[6 juillet]] || {{BEL-d}} [[Bruxelles]] &lt;small&gt;([[Belgique|BEL]])&lt;/small&gt; – {{BEL-d}} [[Bruxelles]] &lt;small&gt;([[Belgique|BEL]])&lt;/small&gt; || {{Étape|plaine}} || align="center"|192 || {{NED-d}} [[Mike Teunissen]] || {{NED-d}} [[Mike Teunissen]]
+|-bgcolor="#FFF7DF"
+|[[2e étape du Tour de France 2019|{{2e|étape}}]]
+| dim. [[7 juillet]] || {{BEL-d}} [[Bruxelles]] - [[Palais royal de Bruxelles|Palais royal]] &lt;small&gt;([[Belgique|BEL]])&lt;/small&gt; – {{BEL-d}} [[Bruxelles]] - [[Atomium]] &lt;small&gt;([[Belgique|BEL]])&lt;/small&gt; || {{Étape|clm par équipes}} || align="center"|27 || {{-d}}  || {{-d}} 
+|-
+*/
+  
+  def cleanData(str) {
+    return str.replaceAll("&lt;small&gt;.*?&lt;/small&gt;", "").replaceAll("\\{\\{.*?}}", "").replaceAll("\\[\\[","").replaceAll("\\|(.*?)\\]\\]","").replaceAll("\\]\\]","").trim();
+  }
+
+  def getResults(data, player, source) {
+    addDebug("Start Cycling");
+    def games = []
+    def df = DateTimeFormat.forPattern('d MMMM yyyy').withLocale(new Locale("fr"))
+    def i1 = data.indexOf("{{En-tête de tableau Liste des étapes")
+    def i2 = data.indexOf("|}", i1)
+    data = data.substring(i1, i2)
+    def m = data =~ /(?ms)\|\[\[([0-9]*).*? étape du Tour de France.*?\n.*?\.(.*?)\|\|(.*?)\|\|(.*?)\|\|(.*?)\|\|(.*?)\|\|(.*?)\n/
+    addDebug("Found: " + m.count + " items");
+    (0..&lt;m.count).each {
+       addDebug("Step: " + cleanData(m[it][1]) + " Date1: " + cleanData(m[it][2]) + " Cities: " + cleanData(m[it][3]) + " Winner: " + cleanData(m[it][6]) + " General: " + cleanData(m[it][7]));
+       def game = [:]
+       game.title = "Stage " + cleanData(m[it][1]) + " " + cleanData(m[it][3]);
+       game.type = "Stage";
+       game.score = ""
+       game.gameDate = df.parseDateTime(cleanData(m[it][2]) + " " + source.year).toDate();
+       game.player1 = cleanData(m[it][6]);
+       game.winner = cleanData(m[it][6]);
+       game.leader = cleanData(m[it][7]);
+       if (game.winner=="")
+        game.future = true;
+       else
+        game.finished = true;
+       games.add(game)
+    }
+    return games;
+  }
+}
+// {{/groovy}}</content>
+</xwikidoc>

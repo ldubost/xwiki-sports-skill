@@ -151,12 +151,12 @@ public class Sports {
       def player1PageName = savePlayer(g.player1, source.playerSpace, source.sportPage)
       def player2PageName = savePlayer(g.player2, source.playerSpace, source.sportPage)
       def winnerPageName = savePlayer(g.winner, source.playerSpace, source.sportPage)
-      addDebug("Ready to save game " + player1PageName + " " + player2PageName + " " + winnerPageName)
-      if (player1PageName==null || player2PageName==null) {
+      addDebug("Ready to save game " + g.title + " " + player1PageName + " " + player2PageName + " " + winnerPageName)
+      if (g.type!="Stage" &amp;&amp; (player1PageName==null || player2PageName==null)) {
         addDebug("No saving")
         continue;
       }
-      def sid = "${source.competition}${source.year}${g.player1}${g.player2}"
+      def sid = (g.type=="Stage") ? "${source.competition}${source.year}${g.title}" : "${source.competition}${source.year}${g.player1}${g.player2}"
       def id = sid.hashCode()
       if (id&lt;0) id=-id
       def gamePageName = "${source.gameSpace}.${id}";
@@ -170,6 +170,11 @@ public class Sports {
         if (currentPlayers==null || currentPlayers.size()&lt;2 || currentPlayers.join(",")!=players.join(",")) {
           gameDoc.set("players", players);
           addDebug("players changed")
+          needsSave = true;
+        }
+        if (g.title &amp;&amp; g.title!="" &amp;&amp; gameDoc.getTitle()!=g.title) {
+          gameDoc.setTitle(g.title);
+          addDebug("title changed");
           needsSave = true;
         }
         if (g.winner &amp;&amp; g.winner!="" &amp;&amp; gameDoc.getValue("winner")!= winnerPageName) {
@@ -205,7 +210,8 @@ public class Sports {
         if (gameDoc.getValue("order")!=counter) {
           addDebug("counter changed")
           gameDoc.set("order", counter);
-          needsSave = true;
+          // The order change should not trigger a save
+          // needsSave = true;
         }
         if (needsSave) {
           addDebug("Saving game ${sgamePageName}")
@@ -302,7 +308,9 @@ public class Sports {
           if (currentNextNb&lt;nextNb) {
             currentNextNb++;
             def message = ""
-            if (gameName=="game") {
+            if (res.type=="Stage") {
+              message = "The next race is ${res.title}"
+            } else if (gameName=="game") {
               message = "The next game is ${res.player1} against ${res.player2}"
             } else
               message = "The next game is the ${gameName} ${res.player1} against ${res.player2}, "
@@ -326,26 +334,15 @@ public class Sports {
             if (res.winner==null) {
               message = "${res.player1} and ${res.player2} have tied in the ${gameName} with score ${res.score}"
             }  else {
-              if (res.winner==res.player1) {
+              if (res.type=="Stage") {
+                message = "${res.player1} has won the race ${res.title}"
+              } else if (res.winner==res.player1) {
                 message = "${res.player1} has won the ${gameName} against ${res.player2} ${res.score}"
               } else {
                 message = "${res.player1} has lost the ${gameName} against ${res.player2} ${res.score}"                
               }
             }
-            /*
-            else if (player=="" || res.winner.toLowerCase().contains(player.toLowerCase())) {
-              if (player=="" || res.player1.toLowerCase().contains(player.toLowerCase()))
-              message = "${res.player1} has won the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
-              else
-                message = "${res.player2} has won the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
-            } else {
-              if (res.player1.toLowerCase().contains(player.toLowerCase()))
-              message= "${res.player1} has lost the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
-              else
-                message = "${res.player2} has lost the ${gameName} ${res.player1} against ${res.player2} ${res.score}"
-            }
-            */
-            if (res.formattedDate) {
+           if (res.formattedDate) {
               message += " on ${res.formattedDate}"
             }
             json.lastResultsTexts.add(message)

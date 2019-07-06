@@ -135,6 +135,7 @@ public class Rugby {
            game.player1 = p1m.count&gt;0 ? p1m[0][1] : ""
            def p2m = (matchMap.get(gameName + "-E2") =~ /.*?\[\[(.*?)(\]|\|).*/)
            game.player2 = p2m.count&gt;0 ? p2m[0][1] : ""
+           game.title = game.player1 + " vs " + game.player2
            def score1 = matchMap.get(gameName + "-S1");
            score1 = (score1==null) ? "" : score1.replaceAll("'","").trim()
            def score2 = matchMap.get(gameName + "-S2");

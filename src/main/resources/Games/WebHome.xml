@@ -21,6 +21,7 @@
   <hidden>false</hidden>
   <content>{{velocity}}
 #set ($columnsProperties = {
+  'doc.title': {"link":"view"},
   'doc.name': {"link":"view"},
   'players': {},
   'winner': {},
@@ -38,10 +39,10 @@
   'tagCloud': true,
   'rowCount': 15,
   'maxPages': 10,
-  'selectedColumn': 'order',
-  'defaultOrder': 'desc'
+  'selectedColumn': 'doc.title',
+  'defaultOrder': 'asc'
 })
-#set ($columns = ['doc.name', 'players', 'winner', 'score', 'competition', 'sport', 'order', 'gameDate', 'doc.date', '_actions'])
+#set ($columns = ['doc.title', 'doc.name', 'players', 'winner', 'score', 'competition', 'sport', 'order', 'gameDate', 'doc.date', '_actions'])
 #livetable('games' $columns $columnsProperties $options)
 {{/velocity}}</content>
   <object>
@@ -117,7 +118,7 @@
       <class>Games.Code.GamesClass</class>
     </property>
     <property>
-      <columns>doc.name players winner score competition sport order gameDate doc.date _actions</columns>
+      <columns>doc.title doc.name players winner score competition sport order gameDate doc.date _actions</columns>
     </property>
     <property>
       <dataSpace/>
@@ -155,6 +156,8 @@
         <cache>0</cache>
         <disabled>0</disabled>
         <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
         <multiSelect>1</multiSelect>
         <name>async_context</name>
         <number>4</number>
@@ -223,6 +226,8 @@
         <cache>0</cache>
         <disabled>0</disabled>
         <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
         <multiSelect>0</multiSelect>
         <name>scope</name>
         <number>8</number>
