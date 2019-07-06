@@ -60,7 +60,7 @@ if (request.query) {
      def source = sg.loadSource(doc.fullName)
      sg.addSource(source)
   
-     json = sg.getResults(request.query, source.sport, source.type)
+     json = sg.getResults(request.query, source.sport, source.type, request.lastNb, request.nextNb)
      def output = JsonOutput.toJson(json);
      print json.text; 
      print "{{{ ${output} }}}"
@@ -78,6 +78,8 @@ if (request.query) {
     {{html clean=false}}
     &lt;form action=""&gt;
     Query: &lt;input type="text" name="query" /&gt;
+    &lt;br /&gt;Previous results: &lt;input type="text" name="lastNb" value="1" /&gt;
+    &lt;br /&gt;Next results: &lt;input type="text" name="nextNb" value="1" /&gt;
     &lt;br /&gt;&lt;input type="checkbox" name="save" value="1" /&gt; Save
     &lt;br /&gt;&lt;input type="checkbox" name="debug" value="1" /&gt; Debug
     &lt;br /&gt;

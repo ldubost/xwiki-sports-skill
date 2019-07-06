@@ -58,7 +58,7 @@
     </competition>
     <endDate>
       <customDisplay>{{include reference="AppWithinMinutes.DateDisplayer" /}}</customDisplay>
-      <dateFormat>dd/MM</dateFormat>
+      <dateFormat>dd/MM/yyyy</dateFormat>
       <disabled>0</disabled>
       <emptyIsToday>0</emptyIsToday>
       <hint/>
@@ -146,7 +146,7 @@
     </sport>
     <startDate>
       <customDisplay>{{include reference="AppWithinMinutes.DateDisplayer" /}}</customDisplay>
-      <dateFormat>dd/MM</dateFormat>
+      <dateFormat>dd/MM/yyyy</dateFormat>
       <disabled>0</disabled>
       <emptyIsToday>0</emptyIsToday>
       <hint/>
