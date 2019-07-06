@@ -39,8 +39,8 @@
   'tagCloud': true,
   'rowCount': 15,
   'maxPages': 10,
-  'selectedColumn': 'doc.title',
-  'defaultOrder': 'asc'
+  'selectedColumn': 'doc.date',
+  'defaultOrder': 'desc'
 })
 #set ($columns = ['doc.title', 'doc.name', 'players', 'winner', 'score', 'competition', 'sport', 'order', 'gameDate', 'doc.date', '_actions'])
 #livetable('games' $columns $columnsProperties $options)
@@ -156,8 +156,6 @@
         <cache>0</cache>
         <disabled>0</disabled>
         <displayType>select</displayType>
-        <freeText>forbidden</freeText>
-        <largeStorage>0</largeStorage>
         <multiSelect>1</multiSelect>
         <name>async_context</name>
         <number>4</number>
@@ -226,8 +224,6 @@
         <cache>0</cache>
         <disabled>0</disabled>
         <displayType>select</displayType>
-        <freeText>forbidden</freeText>
-        <largeStorage>0</largeStorage>
         <multiSelect>0</multiSelect>
         <name>scope</name>
         <number>8</number>
