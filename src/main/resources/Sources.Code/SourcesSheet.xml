@@ -59,8 +59,10 @@ if (request.query != null) {
 
      def source = sg.loadSource(doc.fullName)
      sg.addSource(source)
-  
-     json = sg.getResults(request.query, source.sport, source.type, request.lastNb, request.nextNb)
+
+     def lastNb = (request.lastNb) ? Integer.parseInt(request.lastNb) : 1;
+     def nextNb = (request.nextNb) ? Integer.parseInt(request.nextNb) : 1;
+     json = sg.getResults(request.query, source.sport, source.type, lastNb, nextNb)
      def output = JsonOutput.toJson(json);
      print json.text; 
      print "{{{ ${output} }}}"

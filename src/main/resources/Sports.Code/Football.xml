@@ -43,7 +43,18 @@ public class Soccer {
   }
 
   def cleanScore(score) {
-    return score.replaceAll("\\u2013", " ");
+    return score.replaceAll("\\u2013", " ").replaceAll("\\{\\{.*?\\|","").replaceAll("\\{\\{}", "").replaceAll("\\}\\}", "").trim();
+  }
+
+  def cleanTitle(str) {
+    if (str==null)
+     return "";
+    else
+     return str.replaceAll("\\{\\{", "").replaceAll("\\}\\}", "").replaceAll("\\|", " ").trim();
+  }
+
+  def cleanTeam(str) {
+    return str.replaceAll("'''","").replaceAll("\\{\\{.*?}}", "").replaceAll("\\[\\[","").replaceAll("\\|(.*?)\\]\\]","").replaceAll("\\]\\]","").trim();
   }
 
   def getResults(data, currentPlayer, source) {
@@ -84,17 +95,27 @@ public class Soccer {
          }
          addDebug("Map: ${matchMap}")
          def game = [:]
-         def p1m = (matchMap.get("\u00e9quipe 1") =~ /.*?\{\{([a-zA-Z][a-zA-Z][a-zA-Z]).*/)
-         game.player1 = p1m.count&gt;0 ? p1m[0][1] : ""
-         def p2m = (matchMap.get("\u00e9quipe 2") =~ /.*?\{\{([a-zA-Z][a-zA-Z][a-zA-Z]).*/)
+         if (!source.useCountries) {
+           game.player1 = cleanTeam(matchMap.get("\u00e9quipe 1"));
+           game.player2 = cleanTeam(matchMap.get("\u00e9quipe 2"));
+         } else {
+           def p1m = (matchMap.get("\u00e9quipe 1") =~ /.*?\{\{([a-zA-Z][a-zA-Z][a-zA-Z]).*/)
+           game.player1 = p1m.count&gt;0 ? p1m[0][1] : ""
+           def p2m = (matchMap.get("\u00e9quipe 2") =~ /.*?\{\{([a-zA-Z][a-zA-Z][a-zA-Z]).*/)
+           game.player2 = p2m.count&gt;0 ? p2m[0][1] : ""
+         }
          if (game.player1.contains("dra"))
           game.player1 = "TBD"
-         game.player2 = p2m.count&gt;0 ? p2m[0][1] : ""
          if (game.player2.contains("dra"))
           game.player2 = "TBD"
          if (game.player1!="TBD" || game.player2!="TBD") {
           game.title = game.player1 + " vs " + game.player2
-          game.score = matchMap.get("score")
+          if (source.useTitle) {
+            def stitle = cleanTitle(matchMap.get("titre"))
+            if (stitle!="")
+             game.title = stitle += ": " + game.title
+          }
+          game.score = cleanScore(matchMap.get("score"))
          if (game.score=="-")
            game.score = ""
          if (game.score=="") {
@@ -104,7 +125,7 @@ public class Soccer {
            // this will need to be verified.
            game.finished = true;
          }
-         def dm = (matchMap.get("date") =~ /\{\{date.*?\|(.*?\|.*?\|.*?\|).*?/)
+         def dm = (matchMap.get("date") =~ /\{\{[dD]ate.*?\|(.*?\|.*?\|.*?\|).*?/)
          def hm = (matchMap.get("heure") =~ /.*?([0-9][0-9].[0-9][0-9]).*/)
 
          def sheure = (hm.count&gt;0) ? hm[0][1] : ""
@@ -112,10 +133,23 @@ public class Soccer {
          if (sdate!="") {
            addDebug("Found date: ${sdate}")
            try {
-            game.gameDate = df.parseDateTime(sdate).toDate()
+            if (sdate.endsWith("-"))
+             game.gameDate = df.parseDateTime(sdate + "00:00").toDate()
+            else
+             game.gameDate = df.parseDateTime(sdate).toDate()
            } catch (e) {
-             addDebug("Failed to parse date ${sdate} ${sheure}")
+             addDebug("Failed to parse date. Fallback.")
+             def df2 = DateTimeFormat.forPattern('-MMM-yyyy-').withLocale(new Locale("fr"));
+             try {
+                game.gameDate = df2.parseDateTime(sdate).toDate()
+             } catch(e2) {
+                addDebug("Failed to parse date ${sdate} ${sheure}")
+             }
            }
+         } else {
+            def df2 = DateTimeFormat.forPattern('dd-MM-yyyy').withLocale(new Locale("fr"));
+            game.gameDate = df2.parseDateTime("01-01-" + source.year);
+            addDebug("No date: ${matchMap.get("date")} ${matchMap.get("heure")}")
          }
          def sm = game.score =~ /([0-9]*?)\s.*?\s([0-9]?)/
          def goal1 = (sm.count==0 || sm[0][1].trim()=="") ? 0 : Integer.parseInt(sm[0][1])

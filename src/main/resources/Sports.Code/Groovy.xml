@@ -107,7 +107,7 @@ public class Sports {
     def sportDoc = xwiki.getDocument(sourceDoc.getValue("sport"))
     def competitionDoc = xwiki.getDocument(sourceDoc.getValue("competition"))
     def sportSpace = sportDoc.getSpace();
-    def source = ["title" : sourceDoc.title, "url" : sourceDoc.getValue("url"), "sportPage" : sourceDoc.getValue("sport"), "competitionPage" : sourceDoc.getValue("competition"), "year" : sourceDoc.getValue("year"), "gameSpace" : "${sportSpace}.Games", "playerSpace" : "${sportSpace}.Players", "type" : "0", "startDate" : sourceDoc.getValue("startDate"), "endDate" : sourceDoc.getValue("endDate")]
+    def source = ["title" : sourceDoc.title, "url" : sourceDoc.getValue("url"), "sportPage" : sourceDoc.getValue("sport"), "competitionPage" : sourceDoc.getValue("competition"), "year" : sourceDoc.getValue("year"), "gameSpace" : "${sportSpace}.Games", "playerSpace" : "${sportSpace}.Players", "type" : "0", "startDate" : sourceDoc.getValue("startDate"), "endDate" : sourceDoc.getValue("endDate"), "monitor" : true]
     def options = sourceDoc.getValue("parameters")
     if (options &amp;&amp; options.trim()!="") {
       def jsonSlurper = new JsonSlurper()
@@ -156,7 +156,8 @@ public class Sports {
         addDebug("No saving")
         continue;
       }
-      def sid = (g.type=="Stage") ? "${source.competition}${source.year}${g.title}" : "${source.competition}${source.year}${g.player1}${g.player2}"
+      def sid;
+      sid = (g.type=="Stage" || source.useTitle) ? "${source.competition}${source.year}${g.title}" : "${source.competition}${source.year}${g.player1}${g.player2}"
       def id = sid.hashCode()
       if (id&lt;0) id=-id
       def gamePageName = "${source.gameSpace}.${id}";
@@ -381,7 +382,7 @@ public class Sports {
         if (!handledSources.contains(source.url)) {
           // addDebug("Sources " + source.startDate + " - " + source.endDate)
           handledSources.add(source.url)
-          if (currentDate&gt;source.startDate &amp;&amp; currentDate &lt; source.endDate) {
+          if (currentDate&gt;source.startDate &amp;&amp; currentDate &lt; source.endDate &amp;&amp; source.monitor!=false) {
              addDebug("Source should be monitored: " + source.title)
              getResults("", source.competition, source.type, 0, 0, true)
           }
