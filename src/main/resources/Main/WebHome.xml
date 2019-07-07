@@ -13,37 +13,53 @@
   <date>1546297200000</date>
   <contentUpdateDate>1546297200000</contentUpdateDate>
   <version>1.1</version>
-  <title>Wiki Scores</title>
+  <title>Welcome to Wiki Scores</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>
-== Welcome to Wiki Scores ==
+  <content>{{warning}}
+This service is still a work in progress. 
+{{/warning}}
 
 You'll find the latests sports scores on this Wiki. This Wiki has been created to work with the [[Mycroft Sports Skill&gt;&gt;url:https://github.com/ldubost/sports-skill]] by extracting sports scores from the great Wikipedia.
 
 This would not be possible without the amazing Wikipedia community who is updating Wikipedia pages very quickly as games are finished. Kudos to Wikipedia.
 
-== View Sports results ==
+(% class="wikigeneratedid" %)
+== Recent Competitions ==
 
-* [[Tennis&gt;&gt;Sports.Tennis]] currently only Roland Garros Men &amp; Women
+* Wimbledon Tennis
+* Tour de France races
+* Paris Saint-Germain Games
+
+== Other sports results supported ==
+
+* [[Tennis&gt;&gt;Sports.Tennis]] currently Roland Garros &amp; Wimbledon Men &amp; Women
 * [[Volley-Ball&gt;&gt;Sports.Volley-Ball]] currently only the Volley Ball Nations League Men
-* Feminin Football World Cup 2019
+* Football: Women Football World Cup 2019, Copa America, African Nations Cup, Paris Saint Germain
+* Rugby: Top 14
+* Cycling: Tour de France
 
 == Query Sports Results ==
 
 You can try the following queries:
 
-* nadal for Roland Garros Men
-* halep for Roland Garros Women
-* FRA for Volley-Ball
-* FRA for Football Worldcup
+* nadal for Roland Garros or Wimbledon Men
+* halep for Roland Garros or Wimbledon Women
+* france for Volley-Ball, Football Worldcup
+* brazil for Copa America
 
-{{include document="Sports.Code.Query" /}}
+{{include document="Sports.Code.Query"/}}
 
 === Source &amp; Licence ===
 
-The source of this content is from Wikipedia pages.
-All the content on this Wiki is licenced under the ODBL.</content>
+The initial source of the data from this Wiki is from Wikipedia pages.
+All the content on this Wiki is licenced under the ODBL.
+
+You can find the [[source code&gt;&gt;url:https://github.com/ldubost/xwiki-sports-skill]] of this service on GitHub
+
+=== Contact ===
+
+If you would like to contact me about this service or about the MyCroft skill, you can find me on [[Mastodon (@ldubost@framapiaf.org)&gt;&gt;url:https://framapiaf.org/@ldubost]] or on [[Twitter (ldubost)&gt;&gt;url:https://twitter.com/ldubost]]</content>
 </xwikidoc>
