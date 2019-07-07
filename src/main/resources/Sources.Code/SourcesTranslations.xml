@@ -22,6 +22,8 @@
   <content># Class fields
 Sources.Code.SourcesClass_name=Name
 Sources.Code.SourcesClass_url=URL
+Sources.Code.SourcesClass_urls=urls
+Sources.Code.SourcesClass_viewUrl=View URL
 Sources.Code.SourcesClass_year=Year
 Sources.Code.SourcesClass_startDate=Start Date
 Sources.Code.SourcesClass_endDate=End Date
@@ -51,6 +53,8 @@ sources.livetable.emptyvalue=-
 # Live table specific keys
 sources.livetable.name=Name
 sources.livetable.url=URL
+sources.livetable.urls=urls
+sources.livetable.viewUrl=View URL
 sources.livetable.year=Year
 sources.livetable.startDate=Start Date
 sources.livetable.endDate=End Date

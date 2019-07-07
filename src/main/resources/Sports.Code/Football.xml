@@ -43,7 +43,7 @@ public class Soccer {
   }
 
   def cleanScore(score) {
-    return score.replaceAll("\\u2013", " ").replaceAll("\\{\\{.*?\\|","").replaceAll("\\{\\{}", "").replaceAll("\\}\\}", "").replaceAll("\\{\\{ap.*", "ap").trim();
+    return score.replaceAll("\\u2013", " ").replaceAll("\\{\\{.*?\\|","").replaceAll("\\{\\{", "").replaceAll("\\}\\}", "").replaceAll("\\{\\{ap.*", "ap").replaceAll("\\[\\[.*?\\|","").replaceAll("\\]\\]","").trim();
   }
 
   def cleanTitle(str) {

@@ -107,7 +107,13 @@ public class Sports {
     def sportDoc = xwiki.getDocument(sourceDoc.getValue("sport"))
     def competitionDoc = xwiki.getDocument(sourceDoc.getValue("competition"))
     def sportSpace = sportDoc.getSpace();
-    def source = ["title" : sourceDoc.title, "url" : sourceDoc.getValue("url"), "sportPage" : sourceDoc.getValue("sport"), "competitionPage" : sourceDoc.getValue("competition"), "year" : sourceDoc.getValue("year"), "gameSpace" : "${sportSpace}.Games", "playerSpace" : "${sportSpace}.Players", "type" : "0", "startDate" : sourceDoc.getValue("startDate"), "endDate" : sourceDoc.getValue("endDate"), "monitor" : true]
+    def urls = sourceDoc.getValue("urls")
+    def urlList = []
+    urlList.add(sourceDoc.getValue("url"))
+    if (urls!=null) {
+      urlList.addAll(urls.split("\n"))
+    }
+    def source = ["title" : sourceDoc.title, "url" : sourceDoc.getValue("url"), "urls": urlList, "viewUrl" : sourceDoc.getValue("viewUrl"), "sportPage" : sourceDoc.getValue("sport"), "competitionPage" : sourceDoc.getValue("competition"), "year" : sourceDoc.getValue("year"), "gameSpace" : "${sportSpace}.Games", "playerSpace" : "${sportSpace}.Players", "type" : "0", "startDate" : sourceDoc.getValue("startDate"), "endDate" : sourceDoc.getValue("endDate"), "monitor" : true]
     def options = sourceDoc.getValue("parameters")
     if (options &amp;&amp; options.trim()!="") {
       def jsonSlurper = new JsonSlurper()
@@ -240,6 +246,14 @@ public class Sports {
     return getResults(player, sport, type, lastNb, nextNb, false);
   }
   
+  def getData(source) {
+    def data = ""
+    for (def url in source.urls) {
+       data += xwiki.getURLContent(url)
+    }
+    return data;
+  }
+  
   def getResults(player, sport, type, lastNb, nextNb, save) {
     startTime()
     def source = getSource(sport, type);
@@ -255,7 +269,7 @@ public class Sports {
     codeGroovy = xwiki.parseGroovyFromPage(source.code)
     codeGroovy.setXWiki(xwiki, xcontext, this)
     addDebug("URL: ${source.url}")
-    def data = xwiki.getURLContent(source.url)
+    def data = getData(source)
     addTime("source")
     def games = codeGroovy.getResults(data, player, source)
     addTime("results")

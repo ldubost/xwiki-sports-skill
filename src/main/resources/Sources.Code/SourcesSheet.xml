@@ -30,6 +30,10 @@
   ; &lt;label#if ($xcontext.action == 'edit') for="Sources.Code.SourcesClass_0_url"#end&gt;$escapetool.xml($doc.displayPrettyName('url', false, false))&lt;/label&gt;##
     (% class="xHint" %)$services.localization.render('Hint')
   : $doc.display('url')
+  ; &lt;label#if ($xcontext.action == 'edit') for="Sources.Code.SourcesClass_0_urls"#end&gt;$escapetool.xml($doc.displayPrettyName('urls', false, false))&lt;/label&gt;
+  : $doc.display('urls')
+  ; &lt;label#if ($xcontext.action == 'edit') for="Sources.Code.SourcesClass_0_viewUrl"#end&gt;$escapetool.xml($doc.displayPrettyName('viewUrl', false, false))&lt;/label&gt;
+  : $doc.display('viewUrl')
   ; &lt;label#if ($xcontext.action == 'edit') for="Sources.Code.SourcesClass_0_year"#end&gt;$escapetool.xml($doc.displayPrettyName('year', false, false))&lt;/label&gt;
   : $doc.display('year')
   ; &lt;label#if ($xcontext.action == 'edit') for="Sources.Code.SourcesClass_0_startDate"#end&gt;$escapetool.xml($doc.displayPrettyName('startDate', false, false))&lt;/label&gt;
