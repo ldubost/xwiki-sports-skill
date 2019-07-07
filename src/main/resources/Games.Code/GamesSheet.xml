@@ -26,6 +26,8 @@
 (((
   ; &lt;label#if ($xcontext.action == 'edit') for="Games.Code.GamesClass_0_players"#end&gt;$escapetool.xml($doc.displayPrettyName('players', false, false))&lt;/label&gt;
   : $doc.display('players')
+  ; &lt;label#if ($xcontext.action == 'edit') for="Games.Code.GamesClass_0_status"#end&gt;$escapetool.xml($doc.displayPrettyName('status', false, false))&lt;/label&gt;
+  : $doc.display('status')
   ; &lt;label#if ($xcontext.action == 'edit') for="Games.Code.GamesClass_0_winner"#end&gt;$escapetool.xml($doc.displayPrettyName('winner', false, false))&lt;/label&gt;
   : $doc.display('winner')
   ; &lt;label#if ($xcontext.action == 'edit') for="Games.Code.GamesClass_0_gameLevel"#end&gt;$escapetool.xml($doc.displayPrettyName('gameLevel', false, false))&lt;/label&gt;

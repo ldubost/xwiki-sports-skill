@@ -76,7 +76,8 @@ public class Tennis {
               if (game.score==null || game.score.trim()=="") {
                 if (game.score==null)
                   game.score = ""
-                game.future = true;
+                if (!game.finished)
+                 game.future = true;
               }
               games.add(game);
             }
@@ -121,17 +122,24 @@ public class Tennis {
               if (currentSet.player1==-1) {
                  game.winner = game.player2
                  game.finished = true;
+                 game.future = false;
               } else if (currentSet.player2==-1) {
                  game.winner = game.player1
                  game.finished = true;
+                 game.future = false;
               }
 
-              if (set["player1"]==3 || (set["player1"]==2 &amp;&amp; source.type=="1")) {
+              def nbSets = source.nbSets;
+              if (nbSets==null)
+               nbSets = 3
+              if (set["player1"]==nbSets) {
                  game.winner = game.player1
                  game.finished = true;
-              } else if (set["player2"]==3 || (set["player2"]==2 &amp;&amp; source.type=="1")) {
+                 game.future = false;
+              } else if (set["player2"]==nbSets) {
                  game.winner = game.player2
                  game.finished = true;
+                 game.future = false;
               }
             }
             if (!player1) {
@@ -141,8 +149,6 @@ public class Tennis {
                 else
                   game.score += " ";
                 game.score += currentSet.player1 + " " + currentSet.player2
-              } else {
-                game.score = ""
               }
             }
             game.set = set;
@@ -152,7 +158,8 @@ public class Tennis {
       if (game.score==null || game.score.trim()=="") {
             if (game.score==null)
                game.score = ""
-            game.future = true;
+            if (!game.finished)
+               game.future = true;
       }
 
       // Adding the last game

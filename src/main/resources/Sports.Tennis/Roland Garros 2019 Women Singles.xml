@@ -63,7 +63,7 @@
       </competition>
       <endDate>
         <customDisplay>{{include reference="AppWithinMinutes.DateDisplayer" /}}</customDisplay>
-        <dateFormat>dd/MM</dateFormat>
+        <dateFormat>dd/MM/yyyy</dateFormat>
         <disabled>0</disabled>
         <emptyIsToday>0</emptyIsToday>
         <hint/>
@@ -151,7 +151,7 @@
       </sport>
       <startDate>
         <customDisplay>{{include reference="AppWithinMinutes.DateDisplayer" /}}</customDisplay>
-        <dateFormat>dd/MM</dateFormat>
+        <dateFormat>dd/MM/yyyy</dateFormat>
         <disabled>0</disabled>
         <emptyIsToday>0</emptyIsToday>
         <hint/>
@@ -209,7 +209,7 @@
       <name/>
     </property>
     <property>
-      <parameters>{ "sport" : "tennis", "competition" : "french open", "year" : "2019", "gender": "women", "type" : "1", "code" : "Sports.Code.Tennis" }</parameters>
+      <parameters>{ "sport" : "tennis", "competition" : "french open", "year" : "2019", "gender": "women", "type" : "1", "code" : "Sports.Code.Tennis", "nbSets" : 2 }</parameters>
     </property>
     <property>
       <sport>Sports.Tennis.WebHome</sport>

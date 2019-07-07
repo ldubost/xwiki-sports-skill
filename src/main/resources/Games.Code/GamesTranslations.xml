@@ -21,6 +21,10 @@
   <hidden>true</hidden>
   <content># Class fields
 Games.Code.GamesClass_players=Players or Teams
+Games.Code.GamesClass_status=Status
+Games.Code.GamesClass_status_unknown=---
+Games.Code.GamesClass_status_future=Future
+Games.Code.GamesClass_status_finished=Finished
 Games.Code.GamesClass_winner=Winner
 Games.Code.GamesClass_gameLevel=Game Level
 Games.Code.GamesClass_gameDate=Game Date
@@ -51,6 +55,7 @@ games.livetable.emptyvalue=-
 
 # Live table specific keys
 games.livetable.players=Players or Teams
+games.livetable.status=Status
 games.livetable.winner=Winner
 games.livetable.gameLevel=Game Level
 games.livetable.gameDate=Game Date

@@ -183,6 +183,14 @@ public class Sports {
           addDebug("winner changed")
           needsSave = true;
         }
+
+        def status = (g.finished) ? "finished" : (g.future ? "future" : "");
+        if (gameDoc.getValue("status")!= status) {
+          gameDoc.set("status", status);
+          addDebug("status changed")
+          needsSave = true;
+        }
+
         if (g.score &amp;&amp; g.score!="" &amp;&amp; gameDoc.getValue("score")!= g.score) {
           addDebug("score changed")
           gameDoc.set("score", g.score);
@@ -206,6 +214,11 @@ public class Sports {
         if (gameDoc.getValue("sport")!= source.sportPage) {
           addDebug("sport changed")
           gameDoc.set("sport", source.sportPage);
+          needsSave = true;
+        }
+        if (gameDoc.getValue("gameLevel")!= g.level) {
+          addDebug("level changed")
+          gameDoc.set("gameLevel", g.level);
           needsSave = true;
         }
         if (gameDoc.getValue("order")!=counter) {

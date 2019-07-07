@@ -83,6 +83,7 @@ if (request.query != null) {
     &lt;br /&gt;Previous results: &lt;input type="text" name="lastNb" value="1" /&gt;
     &lt;br /&gt;Next results: &lt;input type="text" name="nextNb" value="1" /&gt;
     &lt;br /&gt;&lt;input type="checkbox" name="save" value="1" /&gt; Save
+    &lt;br /&gt;&lt;input type="checkbox" name="force" value="1" /&gt; Force
     &lt;br /&gt;&lt;input type="checkbox" name="debug" value="1" /&gt; Debug
     &lt;br /&gt;
     &lt;input type="submit" value="Search" class="button" /&gt;

@@ -209,7 +209,7 @@
       <name/>
     </property>
     <property>
-      <parameters>{ "sport" : "football", "competition" : "paris saint germain 2019", "year" : "2019", "gender": "men", "type" : "0", "code" : "Sports.Code.Football", "useCountries" : false, "useTitle" : true, "monitor" : false }</parameters>
+      <parameters>{ "sport" : "football", "competition" : "paris saint germain 2019", "year" : "2019", "gender": "men", "type" : "0", "code" : "Sports.Code.Football", "useCountryCode" : false, "useTitle" : true, "monitor" : false }</parameters>
     </property>
     <property>
       <sport>Sports.Football.WebHome</sport>

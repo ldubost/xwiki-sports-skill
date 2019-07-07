@@ -209,7 +209,7 @@
       <name/>
     </property>
     <property>
-      <parameters>{ "sport" : "tennis", "competition" : "wimbledon", "year" : "2019", "gender" : "men", "type" : "1",  "code" : "Sports.Code.Tennis" }</parameters>
+      <parameters>{ "sport" : "tennis", "competition" : "wimbledon", "year" : "2019", "gender" : "men", "type" : "1",  "code" : "Sports.Code.Tennis", "nbSets" : 2 }</parameters>
     </property>
     <property>
       <sport>Sports.Tennis.WebHome</sport>

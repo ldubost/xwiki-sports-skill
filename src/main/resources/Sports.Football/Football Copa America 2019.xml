@@ -209,7 +209,7 @@
       <name/>
     </property>
     <property>
-      <parameters>{ "sport":"football","competition":"copa america","year":"2019","gender":"men", "type" : "0", "code" : "Sports.Code.Football", "useCountryCode" : true }</parameters>
+      <parameters>{ "sport":"football","competition":"copa america","year":"2019","gender":"men", "type" : "0", "code" : "Sports.Code.Football", "useCountryCode" : true, "useTitle" : true }</parameters>
     </property>
     <property>
       <sport>Sports.Football.WebHome</sport>

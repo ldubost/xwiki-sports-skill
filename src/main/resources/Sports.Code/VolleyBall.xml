@@ -64,7 +64,7 @@ public class VolleyBall {
          game.gameDate = df.parseDateTime(sdate).toDate();
          game.player1 = m[it][3];
          game.player2 = m[it][6];
-         game.title = game.player1 + " vs " + game.player2
+         game.title = game.player1 + " vs " + game.player2 + " " + m[it][1]
          def set1 = cleanScore(m[it][4]);
          def set2 = cleanScore(m[it][5]);
          game.score = set1 + " " + set2

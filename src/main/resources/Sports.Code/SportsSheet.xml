@@ -30,5 +30,36 @@
   : $doc.display('homePage')
 )))
 {{/html}}
+{{/velocity}}
+
+== Games ==
+
+{{velocity}}
+#set ($columnsProperties = {
+  'doc.title': {"link":"view"},
+  'doc.name': {"link":"view"},
+  'status': {},
+  'players': {},
+  'winner': {},
+  'score': {},
+  'competition': {},
+  'sport': {},
+  'order': {},
+  'gameDate': {"html":true},
+  'doc.date': {},
+  '_actions': {"sortable":false,"filterable":false,"html":true,"actions":["edit","delete"]}
+})
+#set ($options = {
+  'className': 'Games.Code.GamesClass',
+  'translationPrefix': 'games.livetable.',
+  'tagCloud': true,
+  'rowCount': 15,
+  'maxPages': 10,
+  'extraParams' : "sport=${doc.fullName}",
+  'selectedColumn': 'doc.date',
+  'defaultOrder': 'desc'
+})
+#set ($columns = ['doc.title', 'status', 'players', 'winner', 'score', 'competition', 'sport', 'order', 'gameDate', 'doc.date', '_actions'])
+#livetable('games' $columns $columnsProperties $options)
 {{/velocity}}</content>
 </xwikidoc>

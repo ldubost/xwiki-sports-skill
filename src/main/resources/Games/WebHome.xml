@@ -22,7 +22,8 @@
   <content>{{velocity}}
 #set ($columnsProperties = {
   'doc.title': {"link":"view"},
-  'doc.name': {"link":"view"},
+  'status': {},
+  'gameLevel': {},
   'players': {},
   'winner': {},
   'score': {},
@@ -42,7 +43,7 @@
   'selectedColumn': 'doc.date',
   'defaultOrder': 'desc'
 })
-#set ($columns = ['doc.title', 'doc.name', 'players', 'winner', 'score', 'competition', 'sport', 'order', 'gameDate', 'doc.date', '_actions'])
+#set ($columns = ['doc.title', 'status', 'gameLevel', 'players', 'winner', 'score', 'competition', 'sport', 'order', 'gameDate', 'doc.date', '_actions'])
 #livetable('games' $columns $columnsProperties $options)
 {{/velocity}}</content>
   <object>
@@ -118,7 +119,7 @@
       <class>Games.Code.GamesClass</class>
     </property>
     <property>
-      <columns>doc.title doc.name players winner score competition sport order gameDate doc.date _actions</columns>
+      <columns>doc.title status players winner score competition sport order gameDate doc.date _actions</columns>
     </property>
     <property>
       <dataSpace/>
