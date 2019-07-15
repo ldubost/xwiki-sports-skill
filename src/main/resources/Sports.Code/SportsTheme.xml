@@ -990,6 +990,15 @@
  }
 }
 
+.navbar-default {
+    min-height: 80px;
+}
+
+#menuview .navbar-brand img {
+    height: 80px;
+}
+
+
 
 
 
@@ -1027,7 +1036,7 @@
       <navbar-default-link-hover-color>#000000</navbar-default-link-hover-color>
     </property>
     <property>
-      <navbar-height>100px</navbar-height>
+      <navbar-height/>
     </property>
     <property>
       <panel-bg>#fafafa</panel-bg>

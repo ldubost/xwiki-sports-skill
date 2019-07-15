@@ -37,7 +37,8 @@
 ** [[Sports&gt;&gt;doc:Sports.WebHome]]
 ** [[Competitions&gt;&gt;doc:Competitions.WebHome]]
 ** [[Sources&gt;&gt;doc:Sources.WebHome]]
-* [[About&gt;&gt;doc:Sports.About]]</content>
+* [[About&gt;&gt;doc:Sports.About]]
+** [[Statistics&gt;&gt;doc:Stats.WebHome]]</content>
   <object>
     <name>Sports.Code.TopMenu</name>
     <number>0</number>
@@ -199,7 +200,7 @@
       <extensionPointId>org.xwiki.platform.template.header.after</extensionPointId>
     </property>
     <property>
-      <name>Menu.TopMenu.WebHome</name>
+      <name>Sports.Code.TopMenu</name>
     </property>
     <property>
       <parameters/>
