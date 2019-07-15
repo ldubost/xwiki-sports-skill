@@ -41,7 +41,7 @@
       <idField>doc.fullName</idField>
       <multiSelect>0</multiSelect>
       <name>competition</name>
-      <number>7</number>
+      <number>9</number>
       <picker>0</picker>
       <prettyName>Competition</prettyName>
       <relationalStorage>0</relationalStorage>
@@ -61,7 +61,7 @@
       <disabled>0</disabled>
       <hint/>
       <name>detailedScore</name>
-      <number>11</number>
+      <number>13</number>
       <picker>0</picker>
       <prettyName>Detailed Score</prettyName>
       <size>30</size>
@@ -70,6 +70,22 @@
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
     </detailedScore>
+    <estimatedGameDate>
+      <customDisplay>{{include reference="AppWithinMinutes.DateDisplayer" /}}</customDisplay>
+      <dateFormat>dd/MM/yyyy HH:mm</dateFormat>
+      <disabled>0</disabled>
+      <emptyIsToday>0</emptyIsToday>
+      <hint/>
+      <name>estimatedGameDate</name>
+      <number>5</number>
+      <picker>1</picker>
+      <prettyName>Estimated Game Date</prettyName>
+      <size>20</size>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <classType>com.xpn.xwiki.objects.classes.DateClass</classType>
+    </estimatedGameDate>
     <gameDate>
       <customDisplay>{{include reference="AppWithinMinutes.DateDisplayer" /}}</customDisplay>
       <dateFormat>dd/MM/yyyy HH:mm</dateFormat>
@@ -77,7 +93,7 @@
       <emptyIsToday>0</emptyIsToday>
       <hint/>
       <name>gameDate</name>
-      <number>5</number>
+      <number>6</number>
       <picker>1</picker>
       <prettyName>Game Date</prettyName>
       <size>20</size>
@@ -105,7 +121,7 @@
       <disabled>0</disabled>
       <hint/>
       <name>order</name>
-      <number>6</number>
+      <number>8</number>
       <numberType>integer</numberType>
       <prettyName>Game Order</prettyName>
       <size>30</size>
@@ -146,7 +162,7 @@
       <disabled>0</disabled>
       <hint/>
       <name>score</name>
-      <number>10</number>
+      <number>12</number>
       <picker>0</picker>
       <prettyName>Score</prettyName>
       <size>30</size>
@@ -167,7 +183,7 @@
       <idField>doc.fullName</idField>
       <multiSelect>0</multiSelect>
       <name>source</name>
-      <number>9</number>
+      <number>11</number>
       <picker>0</picker>
       <prettyName>Source</prettyName>
       <relationalStorage>0</relationalStorage>
@@ -194,7 +210,7 @@
       <idField>doc.fullName</idField>
       <multiSelect>0</multiSelect>
       <name>sport</name>
-      <number>8</number>
+      <number>10</number>
       <picker>0</picker>
       <prettyName>Sport</prettyName>
       <relationalStorage>0</relationalStorage>
@@ -231,6 +247,22 @@
       <values>unknown=---|future=Future|finished=Finished</values>
       <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
     </status>
+    <updatedGameDate>
+      <customDisplay>{{include reference="AppWithinMinutes.DateDisplayer" /}}</customDisplay>
+      <dateFormat>dd/MM/yyyy HH:mm</dateFormat>
+      <disabled>0</disabled>
+      <emptyIsToday>0</emptyIsToday>
+      <hint/>
+      <name>updatedGameDate</name>
+      <number>7</number>
+      <picker>1</picker>
+      <prettyName>Updated Game date</prettyName>
+      <size>20</size>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <classType>com.xpn.xwiki.objects.classes.DateClass</classType>
+    </updatedGameDate>
     <winner>
       <cache>0</cache>
       <classname>Players.Code.PlayersClass</classname>

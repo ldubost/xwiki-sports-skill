@@ -27,8 +27,16 @@
 ** [[Rugby&gt;&gt;doc:Sports.Rugby.WebHome]]
 ** [[Cycling&gt;&gt;doc:Sports.Cycling.WebHome]]
 * [[Query&gt;&gt;doc:Sports.Query.WebHome]]
-* [[Latest Results&gt;&gt;doc:Sports.Query.LatestResults.WebHome]]
-* [[Next Games&gt;&gt;doc:Sports.Query.NextGames.WebHome]]
+* Results
+** [[Latest Results&gt;&gt;doc:Sports.Query.LatestResults.WebHome]]
+** [[All latests results&gt;&gt;doc:Sports.Query.LatestResults.IncludingNoGamesDates]]
+** [[Next Games&gt;&gt;doc:Sports.Query.NextGames.WebHome]]
+* Data
+** [[Games&gt;&gt;doc:Games.WebHome]]
+** [[Players&gt;&gt;doc:Players.WebHome]]
+** [[Sports&gt;&gt;doc:Sports.WebHome]]
+** [[Competitions&gt;&gt;doc:Competitions.WebHome]]
+** [[Sources&gt;&gt;doc:Sources.WebHome]]
 * [[About&gt;&gt;doc:Sports.About]]</content>
   <object>
     <name>Sports.Code.TopMenu</name>

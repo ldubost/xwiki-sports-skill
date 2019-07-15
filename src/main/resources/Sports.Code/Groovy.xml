@@ -174,7 +174,7 @@ public class Sports {
         gameDoc.use(gameDoc.getObject(className, true))
         def players =[player1PageName, player2PageName]
         def currentPlayers = gameDoc.getValue("players")
-        if (currentPlayers==null || currentPlayers.size()&lt;2 || currentPlayers.join(",")!=players.join(",")) {
+        if (currentPlayers!=null &amp;&amp; currentPlayers.size()!=0 &amp;&amp; currentPlayers.join(",")!=players.join(",")) {
           gameDoc.set("players", players);
           addDebug("players changed")
           needsSave = true;
@@ -212,6 +212,24 @@ public class Sports {
           gameDoc.set("gameDate", g.gameDate);
           needsSave = true;
         }
+
+        def estimatedDate = g.gameDate;
+        // Special updateGameDate &amp; estimatedGameDate
+        if (g.finished &amp;&amp; gameDoc.getValue("updatedGameDate")==null) {
+          addDebug("updatedGameDate changed")
+          def updatedDate = new Date();
+          gameDoc.set("updatedGameDate", updatedDate);
+          if (estimatedDate==null &amp;&amp; updatedDate&lt;source.endDate) {
+            estimatedDate = updatedDate
+          }
+          needsSave = true;
+        }
+        if (estimatedDate &amp;&amp; gameDoc.getValue("estimatedGameDate")!=estimatedDate) {
+          addDebug("estimatedGameDate changed")
+          gameDoc.set("estimatedGameDate", estimatedDate);
+          needsSave = true;
+        }
+
         if (gameDoc.getValue("competition")!= source.competitionPage) {
           addDebug("competition changed")
           gameDoc.set("competition", source.competitionPage);
@@ -222,8 +240,8 @@ public class Sports {
           gameDoc.set("sport", source.sportPage);
           needsSave = true;
         }
-        if (gameDoc.getValue("gameLevel")!= g.level) {
-          addDebug("level changed")
+        if (g.level!=null &amp;&amp; gameDoc.getValue("gameLevel") != g.level) {
+          addDebug("level changed " + g.level)
           gameDoc.set("gameLevel", g.level);
           needsSave = true;
         }
@@ -409,7 +427,8 @@ public class Sports {
         if (!handledSources.contains(source.url)) {
           // addDebug("Sources " + source.startDate + " - " + source.endDate)
           handledSources.add(source.url)
-          if (currentDate&gt;source.startDate &amp;&amp; currentDate &lt; source.endDate &amp;&amp; source.monitor!=false) {
+          // check competition date with a margin of 3 days
+          if (currentDate&gt;source.startDate-3 &amp;&amp; currentDate &lt; source.endDate+3 &amp;&amp; source.monitor!=false) {
              addDebug("Source should be monitored: " + source.title)
              getResults("", source.competition, source.type, 0, 0, true)
           }

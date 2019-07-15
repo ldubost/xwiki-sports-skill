@@ -32,8 +32,12 @@
   : $doc.display('winner')
   ; &lt;label#if ($xcontext.action == 'edit') for="Games.Code.GamesClass_0_gameLevel"#end&gt;$escapetool.xml($doc.displayPrettyName('gameLevel', false, false))&lt;/label&gt;
   : $doc.display('gameLevel')
+  ; &lt;label#if ($xcontext.action == 'edit') for="Games.Code.GamesClass_0_estimatedGameDate"#end&gt;$escapetool.xml($doc.displayPrettyName('estimatedGameDate', false, false))&lt;/label&gt;
+  : $doc.display('estimatedGameDate')
   ; &lt;label#if ($xcontext.action == 'edit') for="Games.Code.GamesClass_0_gameDate"#end&gt;$escapetool.xml($doc.displayPrettyName('gameDate', false, false))&lt;/label&gt;
   : $doc.display('gameDate')
+  ; &lt;label#if ($xcontext.action == 'edit') for="Games.Code.GamesClass_0_updatedGameDate"#end&gt;$escapetool.xml($doc.displayPrettyName('updatedGameDate', false, false))&lt;/label&gt;
+  : $doc.display('updatedGameDate')
   ; &lt;label#if ($xcontext.action == 'edit') for="Games.Code.GamesClass_0_order"#end&gt;$escapetool.xml($doc.displayPrettyName('order', false, false))&lt;/label&gt;
   : $doc.display('order')
   ; &lt;label#if ($xcontext.action == 'edit') for="Games.Code.GamesClass_0_competition"#end&gt;$escapetool.xml($doc.displayPrettyName('competition', false, false))&lt;/label&gt;

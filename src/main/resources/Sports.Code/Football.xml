@@ -96,12 +96,12 @@ public class Soccer {
          addDebug("Map: ${matchMap}")
          def game = [:]
 
-         def dm = (matchMap.get("date") =~ /\{\{[dD]ate.*?\|(.*?\|.*?\|.*?\|).*?/)
+         def dm = (matchMap.get("date") =~ /\{\{[dD]ate.*?\|(.*?\|.*?\|.*?)[\|\}].*?/)
          def hm = (matchMap.get("heure") =~ /.*?([0-9][0-9].[0-9][0-9]).*/)
 
          def sheure = (hm.count&gt;0) ? hm[0][1] : ""
-         def shortDate = dm[0][1].replaceAll("\\|", "-")
-         def sdate = (dm.count&gt;0) ? (shortDate + sheure.replaceAll("h", ":")) : ""
+         def shortDate = (dm.count&gt;0) ? dm[0][1].replaceAll("\\|", "-") : ""
+         def sdate = (shortDate!="") ? (shortDate + "-" + sheure.replaceAll("h", ":")) : ""
          if (sdate!="") {
            addDebug("Found date: ${sdate}")
            try {
