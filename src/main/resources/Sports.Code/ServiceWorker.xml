@@ -137,20 +137,17 @@ const FILES_TO_CACHE = [
 self.addEventListener('install', (evt) =&gt; {
   console.log('[ServiceWorker] Install');
   // CODELAB: Precache static resources here.
-  /*
   evt.waitUntil(
     caches.open(CACHE_NAME).then((cache) =&gt; {
       console.log('[ServiceWorker] Pre-caching pages');
       return cache.addAll(FILES_TO_CACHE);
     })
   );
-  */
   // self.skipWaiting();
 });
 
 self.addEventListener('activate', (evt) =&gt; {
   console.log('[ServiceWorker] Activate');
-  /*
   // CODELAB: Remove previous cached data from disk.
   evt.waitUntil(
     caches.keys().then((keyList) =&gt; {
@@ -162,9 +159,7 @@ self.addEventListener('activate', (evt) =&gt; {
       }));
     })
   );
-  */
-  // self.clients.claim();
- 
+  self.clients.claim();
 });
 
 self.addEventListener('fetch', (evt) =&gt; {
@@ -174,7 +169,6 @@ self.addEventListener('fetch', (evt) =&gt; {
     // Not a page navigation, bail.
     return;
   }
-  /*
   evt.respondWith(
     fetch(evt.request)
     .catch(() =&gt; {
@@ -183,7 +177,7 @@ self.addEventListener('fetch', (evt) =&gt; {
         return cache.match("${mainURL}");
       });
     })
-  ); */
+  );
 });
 
 </code>
