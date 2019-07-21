@@ -75,6 +75,11 @@ games.entry.name=Games
 
 # Deprecated keys
 games.dataSpace.title=Data
+
+games.event.gamesfinished.desc=Create a event when a Game is finished
+games.app=Games
+notifications.events.GameFinishedEvent.description=Game is finished
+
 </content>
   <object>
     <name>Games.Code.GamesTranslations</name>
