@@ -135,7 +135,7 @@ public class Sports {
   def savePlayer(player, playerSpace, sport) {
     def className = "Players.Code.PlayersClass"
     if (player!=null &amp;&amp; player.trim()!="") {
-      def playerPageName = playerSpace + "." + player;
+      def playerPageName = playerSpace + "." + player.replaceAll("[.]", "");
       addDebug("Ready to save player " + playerPageName)
       if (!xwiki.exists(playerPageName)) {
         addDebug("Saving player " + playerPageName)
@@ -174,7 +174,8 @@ public class Sports {
         gameDoc.use(gameDoc.getObject(className, true))
         def players =[player1PageName, player2PageName]
         def currentPlayers = gameDoc.getValue("players")
-        if (currentPlayers!=null &amp;&amp; currentPlayers.size()!=0 &amp;&amp; currentPlayers.join(",")!=players.join(",")) {
+        def scurrentPlayers = (currentPlayers==null || currentPlayers.size()==0) ? "" : currentPlayers.join(",");
+        if (scurrentPlayers!=players.join(",")) {
           gameDoc.set("players", players);
           addDebug("players changed")
           needsSave = true;
