@@ -120,7 +120,7 @@ public class Soccer {
            }
          } else {
             def df2 = DateTimeFormat.forPattern('dd-MM-yyyy').withLocale(new Locale("fr"));
-            game.gameDate = df2.parseDateTime("01-01-" + source.year);
+            game.gameDate = df2.parseDateTime("01-01-" + source.year).toDate();
             addDebug("No date: ${matchMap.get("date")} ${matchMap.get("heure")}")
          }
 
@@ -154,7 +154,7 @@ public class Soccer {
            // this will need to be verified.
            game.finished = true;
          }
-         def sm = game.score =~ /([0-9]*?)\s.*?\s([0-9]?)/
+         def sm = game.score =~ /([0-9]*?)\s*.*?\s*([0-9]?)/
          def goal1 = (sm.count==0 || sm[0][1].trim()=="") ? 0 : Integer.parseInt(sm[0][1])
          def goal2 = (sm.count==0 || sm[0][2].trim()=="") ? 0 : Integer.parseInt(sm[0][2])
          if (goal1&gt;goal2)
