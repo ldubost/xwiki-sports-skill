@@ -30,5 +30,9 @@
   : $doc.display('sport')
 )))
 {{/html}}
-{{/velocity}}</content>
+{{/velocity}}
+
+== Games ==
+
+{{include reference="Sports.Code.GamesByCompetitionSheet" /}}</content>
 </xwikidoc>
