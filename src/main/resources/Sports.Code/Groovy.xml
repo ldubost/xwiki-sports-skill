@@ -173,10 +173,15 @@ public class Sports {
       if (gameDoc.isNew()||gameDoc.getObject(className)) {
         def needsSave = false;
         gameDoc.use(gameDoc.getObject(className, true))
-        def players =[player1PageName, player2PageName]
+        def players = [];
+        if (player1PageName!=null &amp;&amp; player1PageName!="")
+         players.add(player1PageName);
+        if (player2PageName!=null &amp;&amp; player2PageName!="")
+         players.add(player2PageName);
         def currentPlayers = gameDoc.getValue("players")
         def scurrentPlayers = (currentPlayers==null || currentPlayers.size()==0) ? "" : currentPlayers.join(",");
-        if (scurrentPlayers!=players.join(",")) {
+        def splayers = (players==null || players.size()==0) ? "" : players.join(",");
+        if (scurrentPlayers!=splayers) {
           gameDoc.set("players", players);
           addDebug("players changed")
           needsSave = true;
