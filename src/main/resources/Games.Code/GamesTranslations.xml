@@ -78,7 +78,7 @@ games.dataSpace.title=Data
 
 games.event.gamesfinished.desc=Create a event when a Game is finished
 games.app=Games
-notifications.events.GameFinishedEvent.description=Game is finished
+notifications.events.GameFinishedEvent.description.by.1user=Game is finished
 
 </content>
   <object>
