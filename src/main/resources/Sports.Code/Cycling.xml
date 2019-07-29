@@ -63,8 +63,8 @@ public class Cycling {
     def games = []
     def df = DateTimeFormat.forPattern('d MMMM yyyy').withLocale(new Locale("fr"))
     def i1 = data.indexOf("{{En-tête de tableau Liste des étapes")
-    def i2 = data.indexOf("|}", i1)
-    data = data.substring(i1, i2)
+    def i2 = data.indexOf("\n|}", i1)
+    data = data.substring(i1, i2 + 1)
     def m = data =~ /(?ms)\|\[\[([0-9]*).*? étape du Tour de France.*?\n.*?\.(.*?)\|\|(.*?)\|\|(.*?)\|\|(.*?)\|\|(.*?)\|\|(.*?)\n/
     addDebug("Found: " + m.count + " items");
     (0..&lt;m.count).each {
